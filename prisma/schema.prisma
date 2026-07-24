@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Portfolio {
+  id          String   @id @default(uuid())
+  slug        String   @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  versions    PortfolioVersion[]
+  generations Generation[]
+  exports     ExportJob[]
+}
+
+model PortfolioVersion {
+  id          String   @id @default(uuid())
+  portfolioId String
+  version     Int      @default(1)
+  prompt      String
+  portfolioData Json
+  theme       String   @default("dark")
+  layout      String   @default("minimal")
+  createdAt   DateTime @default(now())
+
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+
+  @@index([portfolioId])
+}
+
+model Generation {
+  id          String   @id @default(uuid())
+  portfolioId String?
+  prompt      String
+  status      String   @default("pending")
+  aiResponse  Json?
+  error       String?
+  duration    Int?
+  createdAt   DateTime @default(now())
+  completedAt DateTime?
+
+  portfolio   Portfolio? @relation(fields: [portfolioId], references: [id], onDelete: SetNull)
+
+  @@index([portfolioId])
+  @@index([status])
+}
+
+model ExportJob {
+  id          String   @id @default(uuid())
+  portfolioId String
+  versionId   String?
+  format      String   @default("html")
+  status      String   @default("pending")
+  fileUrl     String?
+  error       String?
+  createdAt   DateTime @default(now())
+  completedAt DateTime?
+
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+
+  @@index([portfolioId])
+  @@index([status])
+}
+
+model Template {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  category    String   @default("general")
+  promptTemplate String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
