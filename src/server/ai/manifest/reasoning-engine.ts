@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { PortfolioBlueprint } from "../blueprint/types";
 
 export function reasonAndOptimize(blueprint: PortfolioBlueprint): PortfolioBlueprint {

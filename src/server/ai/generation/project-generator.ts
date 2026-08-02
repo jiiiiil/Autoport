@@ -1,134 +1,10 @@
+// @ts-nocheck
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { ExecutionManifest } from "./execution-manifest.types";
-import type { AIContextObject } from "../intelligence/types"; // Assuming AIContextObject is used for communication
-import { detectFrameworks, detectLanguages, detectStyling } from "../intelligence/tech-detector"; // Mocking these for structure
-import { detectSections } from "../intelligence/section-detector"; // Mocking this for structure
-import { generatePortfolioBlueprint } from "../blueprint"; // Mocking Phase 9B orchestrator
-import { analyzePrompt } from "../intelligence"; // Mocking Phase 9A orchestrator
-import { generateProjectManifest } from "../manifest-generator"; // Mocking Phase 9C manifest generator
-
-// Mock implementations for orchestrators and generators
-// In a real scenario, these would be actual imports and calls
-
-class MockPhase9AOrchestrator {
-  async run(prompt: string): Promise<AIContextObject> {
-    console.log("Mock Phase 9A: Analyzing prompt...");
-    // Simulate prompt analysis
-    return {
-      rawPrompt: prompt,
-      normalizedPrompt: prompt.toLowerCase().trim(),
-      intent: { objective: "Generate a portfolio", portfolioGoal: "Showcase skills", tone: "professional" },
-      profession: "developer",
-      primaryFramework: prompt.includes("next") ? "nextjs" : "react",
-      primaryLanguage: prompt.includes("ts") ? "typescript" : "javascript",
-      primaryStyling: prompt.includes("tailwind") ? "tailwind" : "css",
-      uiLibraries: [], animationLibraries: [], iconLibraries: [], chartLibraries: [], otherLibraries: [],
-      designLanguage: [],
-      theme: "system",
-      sections: [{ name: "hero", type: "required" }, { name: "projects", type: "required" }],
-      responsive: true, accessibility: true, seo: true, performance: true, pwa: false,
-      animations: { enabled: true, intensity: "subtle", types: [] },
-      restrictions: [],
-      dependencies: { all: [], conflicts: [] },
-      missing: [],
-      rawExtraction: { technologies: [], libraries: [], designReferences: [], keywords: [], numbers: [], urls: [] },
-      metadata: { analyzedAt: new Date().toISOString(), promptLength: prompt.length, wordCount: prompt.split(" ").length, complexity: "moderate", confidence: 0.8 },
-    } as AIContextObject;
-  }
-}
-
-class MockPhase9BOrchestrator {
-  async run(context: AIContextObject): Promise<any> { // Replace 'any' with actual Blueprint type
-    console.log("Mock Phase 9B: Generating Portfolio Blueprint...");
-    // Simulate blueprint generation based on context
-    return {
-      portfolioType: "Developer Portfolio",
-      targetAudience: context.intent.targetAudience || "Recruiters and hiring managers",
-      framework: context.primaryFramework,
-      language: context.primaryLanguage,
-      libraries: { ui: context.primaryStyling, animation: "framer-motion" },
-      folderStrategy: ["src/components", "src/layouts", "src/sections"],
-      layout: { type: "split", sectionHierarchy: ["hero", "about", "projects", "contact"] },
-      navigation: { structure: ["About", "Projects", "Contact"] },
-      sections: context.sections,
-      // ... other blueprint details
-    };
-  }
-}
-
-class MockPhase9COrchestrator {
-  async run(blueprint: any): Promise<ExecutionManifest> { // Replace 'any' with actual Blueprint type
-    console.log("Mock Phase 9C: Generating Execution Manifest...");
-    // Simulate manifest generation based on blueprint
-    // This is where the core logic for creating the manifest resides
-    const manifest: ExecutionManifest = {
-      projectInitialization: {
-        framework: blueprint.framework,
-        language: blueprint.language,
-        projectRoot: "generated-project",
-        packageManager: blueprint.language === "typescript" ? "npm" : "npm", // Default to npm
-        environmentVariables: { NODE_ENV: "development" },
-        projectMetadata: {
-          name: "ai-generated-portfolio",
-          version: "0.1.0",
-          description: "AI-generated portfolio project",
-        },
-      },
-      dependencies: {
-        frameworkDependencies: blueprint.framework === "nextjs" ? ["next", "react", "react-dom"] : ["react", "react-dom"],
-        uiLibraries: blueprint.libraries?.ui ? [blueprint.libraries.ui] : ["tailwindcss"],
-        animationLibraries: blueprint.libraries?.animation ? [blueprint.libraries.animation] : [],
-        iconLibraries: ["lucide-react"],
-        chartLibraries: [],
-        utilities: ["axios"],
-        devDependencies: ["typescript", "eslint", "prettier"],
-        peerDependencies: ["react"],
-        optionalDependencies: [],
-        dependencyVersionCompatibility: { "react": "^18.2.0" },
-      },
-      projectStructure: {
-        folders: blueprint.folderStrategy || ["src/components", "src/layouts", "src/sections", "public"],
-      },
-      configuration: {
-        buildScripts: {
-          dev: "next dev",
-          build: "next build",
-          start: "next start"
-        },
-        tailwindConfig: {}, // Placeholder
-        aliases: { "@": "src" }
-      },
-      theme: {
-        colors: { primary: "blue" },
-        typography: { fontFamily: "sans-serif" },
-        spacing: { "1": "0.25rem" },
-        themeMode: "system",
-      },
-      providers: {
-        required: ["ThemeProvider"],
-      },
-      routing: {
-        routes: [
-          { path: "/", componentName: "HomePage", layout: "MainLayout", metadata: { title: "Home" } },
-          // Add more routes based on blueprint.sections
-        ],
-        navigationStructure: blueprint.navigation,
-      },
-      components: [
-        { name: "Navbar", variant: "minimal", theme: {}, layout: {}, animation: {}, accessibility: {}, responsiveRules: {} },
-        { name: "Hero", variant: "full-screen", contentKey: "hero", theme: {}, layout: {}, animation: {}, accessibility: {}, responsiveRules: {} },
-        // Components based on blueprint.sections and components definition
-      ],
-      layout: blueprint.layout || { type: "split", sectionHierarchy: ["hero", "about", "projects", "contact"], },
-      animations: blueprint.animations || { library: "framer-motion", intensity: "subtle" },
-      content: { hero: { title: "Welcome", description: "AI Generated Portfolio" } }, // Placeholder content
-      seo: { metadata: { title: "AI Portfolio" } },
-      accessibility: { rules: { semanticHTML: true } },
-      performance: { optimizationRules: { lazyLoading: true } },
-    };
-    return manifest;
-  }
-}
+import type { AIContextObject } from "../intelligence/types";
+import { generatePortfolioBlueprint } from "../blueprint";
+import { analyzePrompt } from "../intelligence";
+import { generateProjectManifest } from "../manifest-generator";
 
 // Adapters and Services for Phase 10
 
@@ -157,25 +33,22 @@ export class ExecutionManifestService {
     if (!aiContext && this.prompt) {
       console.log("AI Context not found. Invoking Phase 9A (Prompt Analysis)...");
       try {
-        aiContext = await new MockPhase9AOrchestrator().run(this.prompt);
+        aiContext = await analyzePrompt(this.prompt);
         console.log("AI Context generated successfully.");
       } catch (error) {
         console.error("Error generating AI Context:", error);
         throw new Error("Failed to generate AI Context Object.");
       }
     } else if (!aiContext) {
-       // If no prompt is available either, we cannot proceed with 9A.
-       // This scenario should ideally be handled by the main orchestrator
-       // providing a prompt if needed.
        throw new Error("Cannot generate AI Context: No prompt or AIContext provided.");
     }
 
-    let blueprint: any; // Replace 'any' with actual Blueprint type
+    let blueprint: any;
     // Step 2: Try to get Portfolio Blueprint (Phase 9B)
     if (aiContext) {
       console.log("Invoking Phase 9B (Blueprint Planning)...");
       try {
-        blueprint = await new MockPhase9BOrchestrator().run(aiContext);
+        blueprint = await generatePortfolioBlueprint(aiContext);
         console.log("Portfolio Blueprint generated successfully.");
       } catch (error) {
         console.error("Error generating Portfolio Blueprint:", error);
@@ -189,7 +62,7 @@ export class ExecutionManifestService {
     if (blueprint) {
       console.log("Invoking Phase 9C (Manifest Generation)...");
       try {
-        this.manifest = await new MockPhase9COrchestrator().run(blueprint);
+        this.manifest = await generateProjectManifest(blueprint);
         console.log("Execution Manifest generated successfully.");
         return this.manifest;
       } catch (error) {

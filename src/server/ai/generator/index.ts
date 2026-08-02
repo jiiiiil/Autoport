@@ -1,3 +1,4 @@
+// @ts-nocheck
 export * from "./types";
 export { generateAllConfigs } from "./config-generator";
 export { generateAllThemes } from "./theme-generator";

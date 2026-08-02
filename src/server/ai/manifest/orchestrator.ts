@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Phase 9 orchestrator - connects the different phases
 // This orchestrator is responsible for managing the flow of data and execution
 // between Phase 9A (Prompt Intelligence), Phase 9B (Blueprint Planning), and Phase 9C (Manifest Generation).

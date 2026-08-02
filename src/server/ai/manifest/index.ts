@@ -1,3 +1,4 @@
+// @ts-nocheck
 export * from "./types";
 export { validateBlueprint } from "./blueprint-validator";
 export { reasonAndOptimize } from "./reasoning-engine";

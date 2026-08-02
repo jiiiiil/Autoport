@@ -24,10 +24,10 @@ export function PortfolioPreviewCard({ className }: PortfolioPreviewCardProps) {
               </span>
             </div>
             <h3 className="text-lg font-bold text-white mb-1">
-              Alex Morgan
+              Your Name
             </h3>
             <p className="text-xs text-white/50 max-w-[200px]">
-              Creative Developer &amp; Designer
+              Developer &amp; Designer
             </p>
           </div>
 

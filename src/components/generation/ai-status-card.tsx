@@ -8,7 +8,10 @@ import { useAppStore, type AiPhase } from "@/lib/store";
 const phaseConfig: Record<AiPhase, { label: string; icon: typeof Brain; color: string }> = {
   idle: { label: "Idle", icon: Brain, color: "text-text-muted" },
   thinking: { label: "Thinking...", icon: Brain, color: "text-blue-400" },
+  validating: { label: "Validating...", icon: Sparkles, color: "text-blue-300" },
   planning: { label: "Planning...", icon: Sparkles, color: "text-amber-400" },
+  composing: { label: "Composing...", icon: Sparkles, color: "text-purple-400" },
+  refining: { label: "Refining...", icon: Loader2, color: "text-cyan-400" },
   coding: { label: "Coding...", icon: Code2, color: "text-emerald-400" },
   optimizing: { label: "Optimizing...", icon: Loader2, color: "text-primary" },
   compiling: { label: "Compiling...", icon: Loader2, color: "text-blue-400" },

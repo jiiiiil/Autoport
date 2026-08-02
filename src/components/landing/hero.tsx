@@ -15,30 +15,30 @@ export function Hero() {
           <div className="flex flex-col gap-6 max-w-xl">
             <FadeIn delay={0.1} y={15}>
               <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary-light px-3 py-1 text-xs font-medium text-primary">
-                AI-Powered Portfolio
+                Resume Intelligence Engine
               </span>
             </FadeIn>
 
             <FadeIn delay={0.2} y={15}>
               <h1 className="text-4xl md:text-5xl lg:text-[3.5rem] font-bold leading-[1.1] tracking-tight text-text-primary">
-                Build Your Dream
+                Upload your resume.
                 <br />
-                Portfolio with AI
+                Get a portfolio.
               </h1>
             </FadeIn>
 
             <FadeIn delay={0.3} y={15}>
               <p className="text-text-secondary text-base md:text-lg leading-relaxed max-w-md">
-                Create stunning, personalized portfolio websites in minutes. Our
-                AI understands your work and crafts the perfect presentation.
+                No prompts. No forms. Drop your LinkedIn Resume PDF, pick a theme
+                and animation level — our AI builds a premium portfolio automatically.
               </p>
             </FadeIn>
 
             <FadeIn delay={0.4} y={15}>
               <div className="flex items-center gap-4 pt-2">
-                <Link href="/prompt">
+                <Link href="/upload">
                   <Button size="lg">
-                    Get Started Free
+                    Upload Resume
                     <ArrowRight className="w-4 h-4" />
                   </Button>
                 </Link>

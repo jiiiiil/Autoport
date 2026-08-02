@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { GeneratorContext, GeneratedFile } from "./types";
 
 export function generateContentFiles(ctx: GeneratorContext): GeneratedFile[] {

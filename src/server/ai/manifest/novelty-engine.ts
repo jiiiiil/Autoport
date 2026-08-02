@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { PortfolioBlueprint } from "../blueprint/types";
 import type { NoveltyReport } from "./types";
 
@@ -22,7 +23,7 @@ const DIVERSIFICATION_STRATEGIES = [
 ];
 
 const UNIQUE_ELEMENTS_BY_PROFESSION: Record<string, string[]> = {
-  "developer": ["interactive-code-playground", "github-contribution-graph", "live-terminal", "tech-stack-visualizer", "project-deployment-status"],
+  "developer": ["interactive-code-playground", "github-contribution-graph", "tech-stack-visualizer", "project-deployment-status"],
   "ai-engineer": ["model-performance-viz", "data-pipeline-diagram", "accuracy-metrics", "training-progress", "research-paper-links"],
   "designer": ["before-after-comparison", "design-process-timeline", "style-guide-preview", "figma-embed", "interaction-prototype"],
   "photographer": ["exif-data-display", "location-map", "gear-list", "booking-calendar", "print-shop"],

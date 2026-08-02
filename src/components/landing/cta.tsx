@@ -11,15 +11,15 @@ export function CTA() {
       <div className="mx-auto max-w-7xl px-6">
         <FadeIn className="text-center">
           <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-text-primary mb-4">
-            Ready to get started?
+            Ready to build your portfolio?
           </h2>
           <p className="text-text-secondary text-base max-w-md mx-auto mb-8">
-            Join thousands of professionals who have transformed their portfolios
-            with AI.
+            Upload your LinkedIn Resume PDF and let the Resume Intelligence Engine
+            craft a premium portfolio — no writing required.
           </p>
-          <Link href="/prompt">
+          <Link href="/upload">
             <Button size="lg">
-              Start for Free
+              Upload Your Resume
               <ArrowRight className="w-4 h-4" />
             </Button>
           </Link>

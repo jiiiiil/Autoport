@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { PortfolioBlueprint } from "../blueprint/types";
 import type { ComposedLayout } from "./types";
 

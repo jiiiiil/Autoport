@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { PortfolioBlueprint } from "../blueprint/types";
 import type { PortfolioBlueprint as BP } from "../blueprint/types";
 

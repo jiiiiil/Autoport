@@ -3,12 +3,12 @@
 import { SuggestionChip } from "./suggestion-chip";
 
 const suggestions = [
-  "Modern Designer",
-  "Full Stack Dev",
-  "Dark Aesthetic",
-  "Portfolio XE",
-  "React Specialist",
-  "Entrepreneur",
+  "I'm a Full Stack Developer, build with React and Node.js",
+  "UI/UX Designer specializing in minimal dark interfaces",
+  "AI Engineer working with LLMs and Python",
+  "Photographer looking for a gallery-style portfolio",
+  "DevOps Engineer with 5+ years of experience",
+  "Product Designer, focused on SaaS products",
 ];
 
 interface SuggestionListProps {

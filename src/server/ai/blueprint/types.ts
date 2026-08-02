@@ -7,7 +7,7 @@ export type LayoutType =
   | "minimal" | "custom";
 
 export type HeroVariant =
-  | "centered" | "split" | "terminal" | "particle" | "minimal"
+  | "centered" | "split" | "particle" | "minimal"
   | "typewriter" | "3d" | "video-bg" | "glass" | "animated-gradient"
   | "full-screen" | "scroll";
 

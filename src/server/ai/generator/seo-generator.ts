@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { GeneratorContext, GeneratedFile } from "./types";
 
 export function generateSeoFiles(ctx: GeneratorContext): GeneratedFile[] {

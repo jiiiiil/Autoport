@@ -9,6 +9,11 @@ export type Language =
   | "typescript" | "javascript" | "tsx" | "jsx"
   | "python" | "php" | "ruby" | "go" | "rust" | "java" | "other";
 
+export type PackageManager =
+  | "npm" | "yarn" | "pnpm" | "bun" | "pip" | "composer" | "cargo" | "maven" | "other";
+
+export type BuildScripts = Record<string, string>;
+
 export type StylingSystem =
   | "tailwind" | "css" | "scss" | "sass" | "less"
   | "css-modules" | "styled-components" | "emotion"

@@ -26,6 +26,9 @@ export type AiPhase =
   | "idle"
   | "thinking"
   | "planning"
+  | "validating"
+  | "composing"
+  | "refining"
   | "coding"
   | "optimizing"
   | "compiling"
@@ -47,6 +50,12 @@ interface AppState {
 
   isGenerating: boolean;
   setIsGenerating: (v: boolean) => void;
+
+  generationTriggered: boolean;
+  setGenerationTriggered: (v: boolean) => void;
+
+  generationError: string | null;
+  setGenerationError: (e: string | null) => void;
 
   progress: number;
   setProgress: (v: number) => void;
@@ -78,21 +87,22 @@ interface AppState {
 
   previewSections: string[];
   addPreviewSection: (section: string) => void;
+  setPreviewSections: (sections: string[]) => void;
 
   reset: () => void;
 }
 
 const makeSteps = (): GenerationStep[] => [
-  { title: "Analyze Prompt", description: "Understanding your input and context", status: "pending" },
-  { title: "Understanding Skills", description: "Mapping expertise to portfolio sections", status: "pending" },
-  { title: "Selecting Template", description: "Choosing the best layout for your profile", status: "pending" },
-  { title: "Generating Components", description: "Building reusable UI elements", status: "pending" },
-  { title: "Generating Animations", description: "Adding smooth transitions and effects", status: "pending" },
-  { title: "Generating Layout", description: "Assembling the full page structure", status: "pending" },
-  { title: "Creating Theme", description: "Designing color palette and typography", status: "pending" },
-  { title: "Compiling React", description: "Bundling components into production build", status: "pending" },
-  { title: "Optimizing", description: "Performance tuning and asset compression", status: "pending" },
-  { title: "Complete", description: "Your portfolio is ready", status: "pending" },
+  { title: "Validating Prompt", description: "Checking prompt constraints and requirements", status: "pending" },
+  { title: "Analyzing Intelligence", description: "Understanding context, intent, and design language", status: "pending" },
+  { title: "Composing Layout", description: "AI-dynamic layout architecture generation", status: "pending" },
+  { title: "Composing Sections", description: "Dynamic section hierarchy and storytelling flow", status: "pending" },
+  { title: "Composing Theme", description: "Generative color palette and typography", status: "pending" },
+  { title: "Composing Motion", description: "Animation strategy and micro-interactions", status: "pending" },
+  { title: "Adaptive Refinement", description: "Optimizing visual hierarchy and spacing", status: "pending" },
+  { title: "Validating Composition", description: "Running quality gates and accessibility checks", status: "pending" },
+  { title: "Finalizing", description: "Preparing composition graph for generation", status: "pending" },
+  { title: "Complete", description: "Your unique portfolio is ready", status: "pending" },
 ];
 
 const initialMetrics: Metrics = {
@@ -111,6 +121,12 @@ export const useAppStore = create<AppState>((set) => ({
 
   isGenerating: false,
   setIsGenerating: (isGenerating) => set({ isGenerating }),
+
+  generationTriggered: false,
+  setGenerationTriggered: (generationTriggered) => set({ generationTriggered }),
+
+  generationError: null,
+  setGenerationError: (generationError) => set({ generationError }),
 
   progress: 0,
   setProgress: (progress) => set({ progress }),
@@ -143,11 +159,14 @@ export const useAppStore = create<AppState>((set) => ({
   previewSections: [],
   addPreviewSection: (section) =>
     set((state) => ({ previewSections: [...state.previewSections, section] })),
+  setPreviewSections: (previewSections) => set({ previewSections }),
 
   reset: () =>
     set({
       prompt: "",
       isGenerating: false,
+      generationTriggered: false,
+      generationError: null,
       progress: 0,
       currentStepIndex: 0,
       steps: makeSteps(),

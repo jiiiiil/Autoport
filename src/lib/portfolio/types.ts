@@ -65,6 +65,101 @@ export interface PortfolioSocialLink {
   icon?: string;
 }
 
+export interface PortfolioTestimonial {
+  author?: string;
+  role?: string;
+  content?: string;
+  rating?: number;
+  company?: string;
+}
+
+export interface PortfolioService {
+  name?: string;
+  description?: string;
+  price?: string;
+  features?: string[];
+}
+
+export interface PortfolioMetric {
+  label?: string;
+  value?: string;
+  icon?: string;
+  description?: string;
+}
+
+export interface PortfolioPublication {
+  title?: string;
+  publisher?: string;
+  date?: string;
+  link?: string;
+  excerpt?: string;
+}
+
+export interface PortfolioFaq {
+  question?: string;
+  answer?: string;
+}
+
+export interface PortfolioProduct {
+  name?: string;
+  description?: string;
+  link?: string;
+  status?: "live" | "beta" | "coming-soon";
+}
+
+export interface PortfolioClient {
+  name?: string;
+  industry?: string;
+  project?: string;
+}
+
+export interface PortfolioAward {
+  title?: string;
+  organization?: string;
+  date?: string;
+  description?: string;
+}
+
+export interface PortfolioRoadmap {
+  milestone?: string;
+  date?: string;
+  status?: "completed" | "in-progress" | "upcoming";
+}
+
+export interface PortfolioArticle {
+  title?: string;
+  excerpt?: string;
+  date?: string;
+  link?: string;
+}
+
+export interface PortfolioSpeaking {
+  event?: string;
+  topic?: string;
+  date?: string;
+  link?: string;
+}
+
+export interface PortfolioLanguage {
+  name?: string;
+  proficiency?: string;
+}
+
+export interface PortfolioOrganization {
+  title?: string;
+  organization?: string;
+  role?: string;
+  date?: string;
+  description?: string;
+}
+
+export interface PortfolioGalleryItem {
+  title?: string;
+  description?: string;
+  category?: string;
+  image?: string;
+}
+
 export interface PortfolioContact {
   email?: string;
   phone?: string;
@@ -114,6 +209,25 @@ export interface PortfolioSections {
   certifications?: PortfolioCertification[];
   socialLinks?: PortfolioSocialLink[];
   contact?: PortfolioContact;
+  testimonials?: PortfolioTestimonial[];
+  gallery?: PortfolioGalleryItem[];
+  services?: PortfolioService[];
+  metrics?: PortfolioMetric[];
+  publications?: PortfolioPublication[];
+  faq?: PortfolioFaq[];
+  products?: PortfolioProduct[];
+  clients?: PortfolioClient[];
+  awards?: PortfolioAward[];
+  roadmap?: PortfolioRoadmap[];
+  articles?: PortfolioArticle[];
+  speaking?: PortfolioSpeaking[];
+  timeline?: PortfolioExperience[];
+  openSource?: PortfolioProject[];
+  community?: PortfolioAchievement[];
+  experiments?: PortfolioProject[];
+  resume?: PortfolioExperience[];
+  languages?: PortfolioLanguage[];
+  organizations?: PortfolioOrganization[];
 }
 
 export interface PortfolioObject {

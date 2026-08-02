@@ -4,7 +4,7 @@ export const GenerateSchema = z.object({
   prompt: z
     .string()
     .min(10, "Prompt must be at least 10 characters")
-    .max(2000, "Prompt must be at most 2000 characters"),
+    .max(10000, "Prompt must be at most 10000 characters"),
   template: z.string().optional(),
 });
 

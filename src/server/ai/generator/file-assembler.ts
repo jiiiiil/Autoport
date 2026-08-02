@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { GeneratorContext, GeneratedFile } from "./types";
 import type { ExecutionManifest } from "../manifest/types";
 

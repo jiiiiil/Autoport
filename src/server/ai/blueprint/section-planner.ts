@@ -18,7 +18,7 @@ const SECTION_TEMPLATES: SectionTemplate[] = [
     name: "Hero",
     component: "HeroSection",
     variants: {
-      "developer": "terminal",
+      "developer": "centered",
       "designer": "split",
       "photographer": "full-screen",
       "default": "centered",

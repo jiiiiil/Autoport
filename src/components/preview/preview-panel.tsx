@@ -16,6 +16,7 @@ interface PreviewPanelProps {
 export function PreviewPanel({ className, onBack }: PreviewPanelProps) {
   const isReady = usePortfolioStore((s) => s.isReady);
   const portfolio = usePortfolioStore((s) => s.portfolio);
+  const composition = usePortfolioStore((s) => s.composition);
 
   return (
     <div className={className}>
@@ -35,18 +36,8 @@ export function PreviewPanel({ className, onBack }: PreviewPanelProps) {
 
       {isReady ? (
         <FadeIn delay={0.2} y={15}>
-          <div className="rounded-xl border border-white/10 bg-white/5 overflow-hidden">
-            <div className="p-3 border-b border-white/10 flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-red-400/80" />
-              <span className="w-2.5 h-2.5 rounded-full bg-amber-400/80" />
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400/80" />
-              <span className="ml-2 text-[10px] text-text-muted font-mono">
-                {portfolio.personalInfo?.name?.toLowerCase().replace(/\s+/g, "-") ?? "portfolio"}.tsx
-              </span>
-            </div>
-            <div className="max-h-[calc(100vh-16rem)] overflow-y-auto">
-              <PortfolioRenderer portfolio={portfolio} />
-            </div>
+          <div className="w-full h-full overflow-y-auto">
+            <PortfolioRenderer portfolio={portfolio} composition={composition} />
           </div>
         </FadeIn>
       ) : (

@@ -19,7 +19,14 @@ export const portfolioRepository = {
     return prisma.portfolio.findUnique({ where: { slug } });
   },
 
-  async createVersion(portfolioId: string, version: number, prompt: string, portfolioData: PortfolioData, theme: string, layout: string) {
+  async createVersion(
+    portfolioId: string,
+    version: number,
+    prompt: string,
+    portfolioData: PortfolioData,
+    theme: string,
+    layout: string,
+  ) {
     return prisma.portfolioVersion.create({
       data: {
         portfolioId,

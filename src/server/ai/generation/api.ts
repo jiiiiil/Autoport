@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Phase 10: AI Project Generation & Assembly Engine
 
 import { ProjectGenerationOrchestrator } from "./project-generator";

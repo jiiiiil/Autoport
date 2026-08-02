@@ -8,7 +8,6 @@ import type {
 export function selectHeroVariant(context: AIContextObject): HeroVariant {
   const lower = context.normalizedPrompt;
 
-  if (/\bterminal\b|\bcode\b|\bcli\b/i.test(lower)) return "terminal";
   if (/\bparticle\b|\bgalaxy\b|\bspace\b/i.test(lower)) return "particle";
   if (/\btypewriter\b|\btyping\b/i.test(lower)) return "typewriter";
   if (/\b3d\b|\bthree\b|\bwebgl\b/i.test(lower)) return "3d";

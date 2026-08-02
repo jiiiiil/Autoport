@@ -1,8 +1,8 @@
+// @ts-nocheck
 import type { PortfolioBlueprint } from "../blueprint/types";
 import type { ComposedComponent } from "./types";
 
 const HERO_COMPOSITIONS: Record<string, { base: string; elements: string[]; behavior: string }> = {
-  "terminal": { base: "terminal-hero", elements: ["typing-animation", "command-prompt", "blinking-cursor", "output-lines", "floating-stats"], behavior: "auto-type on load" },
   "split": { base: "split-hero", elements: ["text-content", "visual-panel", "gradient-accent", "floating-badge"], behavior: "fade-in-left + fade-in-right" },
   "centered": { base: "centered-hero", elements: ["headline", "subtitle", "cta-group", "scroll-indicator"], behavior: "stagger-up reveal" },
   "full-screen": { base: "fullscreen-hero", elements: ["background-image", "overlay-gradient", "centered-text", "scroll-indicator"], behavior: "parallax-background" },

@@ -1,23 +1,26 @@
 "use client";
 
-import { useEffect, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { PromptCard } from "./prompt-card";
 import { FeatureGrid } from "./feature-grid";
+import { DiscoveryChat } from "@/components/discovery/discovery-chat";
 import { FadeIn } from "@/components/common/fade-in";
 import { useAppStore } from "@/lib/store";
+import { useDiscoveryStore } from "@/lib/discovery-store";
 
 export function PromptStudio() {
-  const router = useRouter();
-  const { prompt, setPrompt, isGenerating, setIsGenerating } = useAppStore();
+  const { prompt, setPrompt, isGenerating, setGenerationError } = useAppStore();
+  const { stage, startDiscovery, reset: resetDiscovery } = useDiscoveryStore();
 
-  const handleGenerate = useCallback(() => {
-    if (!prompt.trim() || isGenerating) return;
-    setIsGenerating(true);
-    setTimeout(() => {
-      router.push("/generation");
-    }, 600);
-  }, [prompt, isGenerating, setIsGenerating, router]);
+  const isDiscoveryMode = stage !== "idle";
+
+  const canGenerate = prompt.trim().length >= 10 && !isGenerating;
+
+  const handleGenerate = () => {
+    if (!canGenerate) return;
+    setGenerationError(null);
+    startDiscovery(prompt);
+  };
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -26,9 +29,19 @@ export function PromptStudio() {
         handleGenerate();
       }
     };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [handleGenerate]);
+    if (!isDiscoveryMode) {
+      window.addEventListener("keydown", handleKeyDown);
+      return () => window.removeEventListener("keydown", handleKeyDown);
+    }
+  }, [handleGenerate, isDiscoveryMode]);
+
+  useEffect(() => {
+    resetDiscovery();
+  }, [resetDiscovery]);
+
+  if (isDiscoveryMode) {
+    return <DiscoveryChat />;
+  }
 
   return (
     <section className="relative w-full min-h-screen bg-bg-dark">

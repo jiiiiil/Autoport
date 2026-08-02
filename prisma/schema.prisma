@@ -18,16 +18,16 @@ model Portfolio {
 }
 
 model PortfolioVersion {
-  id          String   @id @default(uuid())
-  portfolioId String
-  version     Int      @default(1)
-  prompt      String
-  portfolioData Json
-  theme       String   @default("dark")
-  layout      String   @default("minimal")
-  createdAt   DateTime @default(now())
+  id              String   @id @default(uuid())
+  portfolioId     String
+  version         Int      @default(1)
+  prompt          String
+  portfolioData   Json
+  theme           String   @default("dark")
+  layout          String   @default("minimal")
+  createdAt       DateTime @default(now())
 
-  portfolio   Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  portfolio       Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
 
   @@index([portfolioId])
 }

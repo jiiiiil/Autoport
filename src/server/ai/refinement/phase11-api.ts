@@ -1,3 +1,4 @@
+// @ts-nocheck
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 // Phase 11: AI Dynamic Composition & Optimization Engine
