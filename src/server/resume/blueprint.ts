@@ -1,4 +1,4 @@
-import type { ResumeJSON, AnimationLevel, PortfolioStrategy, ThemeName } from "./types";
+import type { ResumeJSON, AnimationLevel, PortfolioStrategy, ThemeName, ResumeExperience } from "./types";
 import type {
   CompositionGraph, ComposedSection, ComposedLayout, ComposedNavigation,
   ComposedTheme, ComposedMotion, ComposedComponent, ComposedResponsive,
@@ -162,16 +162,25 @@ function buildSectionMeta(resume: ResumeJSON, strategy: PortfolioStrategy): Sect
 
   const hasProjects = resume.projects.length > 0;
   if (hasProjects) {
-    meta.push({ id: "projects", variant: strategy.portfolioType === "designer" ? "showcase" : strategy.portfolioType === "founder" ? "case-study" : "card", priority: strategy.portfolioType === "developer" || strategy.portfolioType === "designer" ? 2 : 4, role: "Proof of work", weight: "primary" });
+    const projectVariant = strategy.portfolioType === "founder" ? "case-study"
+      : strategy.portfolioType === "researcher" ? "case-study"
+      : resume.projects.length >= 3 ? "bento"
+      : "card";
+    meta.push({ id: "projects", variant: projectVariant, priority: strategy.portfolioType === "developer" || strategy.portfolioType === "designer" ? 2 : 4, role: "Proof of work", weight: "primary" });
   }
 
   if (resume.experience.length > 0) {
-    meta.push({ id: "experience", variant: strategy.careerLevel === "senior" || strategy.careerLevel === "lead" ? "detailed" : "timeline", priority: 3, role: "Career trajectory", weight: "secondary" });
+    meta.push({ id: "experience", variant: resume.experience.length <= 2 ? "card" : "timeline", priority: 3, role: "Career trajectory", weight: "secondary" });
   }
 
   if (resume.skills.length > 0 || resume.technologies.length > 0) {
-    meta.push({ id: "skills", variant: strategy.portfolioType === "developer" ? "icon-grid" : "pills", priority: 4, role: "Competencies", weight: "secondary" });
+    const skillVariant = strategy.portfolioType === "designer" ? "cards"
+      : strategy.careerLevel === "senior" || strategy.careerLevel === "lead" ? "bars"
+      : "cards";
+    meta.push({ id: "skills", variant: skillVariant, priority: 4, role: "Competencies", weight: "secondary" });
   }
+
+  meta.push({ id: "metrics", variant: "card", priority: 4, role: "Quantified highlights", weight: "secondary" });
 
   if (resume.education.length > 0) {
     meta.push({ id: "education", variant: "card", priority: 5, role: "Academic background", weight: "tertiary" });
@@ -210,6 +219,76 @@ function buildSectionMeta(resume: ResumeJSON, strategy: PortfolioStrategy): Sect
   return meta.sort((a, b) => a.priority - b.priority);
 }
 
+function sectionDesignDirectives(m: SectionMeta): NonNullable<ComposedSection["design"]> {
+  const base = {
+    hierarchy: "standard" as const,
+    cardStyle: "default" as const,
+    density: "balanced" as const,
+    whitespace: "medium" as const,
+    decor: [] as string[],
+    content: {
+      eyebrow: undefined as string | undefined,
+      subtitle: undefined as string | undefined,
+      showMetrics: false,
+      showHighlights: false,
+      showTechnologies: false,
+      showActions: false,
+      align: "center" as const,
+    },
+  };
+
+  switch (m.id) {
+    case "hero":
+      return { ...base, hierarchy: "hero-focused", whitespace: "large", decor: ["gradient-orbs", "scroll-hint"] };
+    case "about":
+      return {
+        ...base,
+        cardStyle: "default",
+        density: "spacious",
+        content: { ...base.content, eyebrow: "About", subtitle: sectionSubtitle(m.id), showMetrics: true, showHighlights: true, showActions: false, align: "left" },
+      };
+    case "projects":
+      return {
+        ...base,
+        cardStyle: "elevated",
+        whitespace: "large",
+        content: { ...base.content, eyebrow: "Portfolio", subtitle: sectionSubtitle(m.id), showActions: true, align: "center" },
+      };
+    case "skills":
+      return {
+        ...base,
+        cardStyle: "default",
+        content: { ...base.content, eyebrow: "Expertise", subtitle: sectionSubtitle(m.id), showMetrics: true, align: "center" },
+      };
+    case "experience":
+      return {
+        ...base,
+        cardStyle: "glass",
+        content: { ...base.content, eyebrow: "Career", subtitle: sectionSubtitle(m.id), showHighlights: true, showTechnologies: true, align: "center" },
+      };
+    case "metrics":
+      return { ...base, density: "dense", whitespace: "compact", content: { ...base.content, showMetrics: true, align: "center" } };
+    case "education":
+      return { ...base, cardStyle: "glass", content: { ...base.content, eyebrow: "Academics", subtitle: sectionSubtitle("education"), align: "center" } };
+    case "contact":
+      return { ...base, whitespace: "large", content: { ...base.content, eyebrow: "Contact", subtitle: sectionSubtitle("contact"), showActions: true, align: "center" } };
+    default:
+      return base;
+  }
+}
+
+function sectionSubtitle(id: string): string {
+  switch (id) {
+    case "about": return "The story behind the work and the person making it.";
+    case "skills": return "The tools and technologies I use to bring ideas to life.";
+    case "projects": return "Selected work — products and experiences built end to end.";
+    case "experience": return "Where I have worked and what I delivered along the way.";
+    case "education": return "The foundations that shaped how I think and build.";
+    case "contact": return "Have an idea in mind? Let's make it real.";
+    default: return "";
+  }
+}
+
 function buildSections(meta: SectionMeta[]): ComposedSection[] {
   return meta.map((m) => ({
     id: m.id,
@@ -227,6 +306,7 @@ function buildSections(meta: SectionMeta[]): ComposedSection[] {
     contentRequirements: ["rich-text", "media-optional"],
     visualWeight: m.weight,
     metadata: {},
+    design: sectionDesignDirectives(m),
   }));
 }
 
@@ -362,12 +442,103 @@ function buildMetadata(): CompositionMetadata {
   };
 }
 
+function buildAboutMetrics(
+  resume: ResumeJSON,
+  role: string
+): { label: string; value: string }[] {
+  const metrics: { label: string; value: string }[] = [];
+
+  const years = computeYears(resume.experience);
+  if (years > 0) {
+    metrics.push({ label: "Years Experience", value: `${years}+` });
+  }
+
+  if (resume.projects.length > 0) {
+    metrics.push({ label: "Projects Shipped", value: `${resume.projects.length}` });
+  }
+
+  const techCount = new Set([
+    ...resume.technologies,
+    ...resume.skills.flatMap((g) => g.skills),
+  ]).size;
+  if (techCount > 0) {
+    metrics.push({ label: "Technologies", value: `${techCount}` });
+  }
+
+  if (resume.certifications.length > 0) {
+    metrics.push({ label: "Certifications", value: `${resume.certifications.length}` });
+  }
+
+  if (resume.languages.length > 0) {
+    metrics.push({ label: "Languages", value: `${resume.languages.length}` });
+  }
+
+  if (metrics.length === 0) {
+    metrics.push(
+      { label: "Focus", value: role },
+      { label: "Approach", value: "Detail-oriented" }
+    );
+  }
+
+  return metrics.slice(0, 4);
+}
+
+function buildAboutStrengths(
+  resume: ResumeJSON,
+  role: string
+): { label: string; detail?: string }[] {
+  const strengths: { label: string; detail?: string }[] = [];
+
+  const topSkills = resume.skills[0]?.skills ?? [];
+  const firstTech = resume.technologies[0];
+  if (topSkills.length >= 3) {
+    strengths.push({ label: topSkills[0], detail: `Core focus across ${topSkills.length} strengths` });
+    strengths.push({ label: topSkills[1], detail: "Applied in real-world work" });
+  } else if (firstTech) {
+    strengths.push({ label: firstTech, detail: "Primary toolkit" });
+  }
+
+  if (resume.projects.length > 0) {
+    strengths.push({ label: "Project-driven", detail: `${resume.projects.length} shipped projects` });
+  }
+
+  if (resume.experience.some((e) => e.current)) {
+    strengths.push({ label: "Currently active", detail: "Building in production today" });
+  }
+
+  if (resume.awards.length > 0 || resume.certifications.length > 0) {
+    strengths.push({ label: "Recognized", detail: "Awards & certifications" });
+  }
+
+  if (strengths.length === 0) {
+    strengths.push({ label: role, detail: "Professional focus" });
+  }
+
+  return strengths.slice(0, 4);
+}
+
+function computeYears(experience: ResumeExperience[]): number {
+  let years = 0;
+  for (const e of experience) {
+    const start = e.startDate ? parseInt(e.startDate, 10) : NaN;
+    const end = e.current
+      ? new Date().getFullYear()
+      : e.endDate
+        ? parseInt(e.endDate, 10)
+        : NaN;
+    if (!Number.isNaN(start) && !Number.isNaN(end) && end >= start) {
+      years += end - start;
+    }
+  }
+  return years;
+}
+
 function buildPortfolioData(resume: ResumeJSON): PortfolioObject {
   const name = resume.personal.name ?? "Your Name";
   const role = resume.personal.role ?? resume.personal.headline ?? "Professional";
   const summary = resume.personal.summary ?? "";
 
-  const sections: PortfolioObject["sections"] = {};
+  const sections: NonNullable<PortfolioObject["sections"]> = {};
 
   sections.hero = {
     headline: `Hi, I\u2019m ${name}`,
@@ -377,10 +548,21 @@ function buildPortfolioData(resume: ResumeJSON): PortfolioObject {
   };
 
   if (summary) {
+    const sentences = summary.split(/(?<=[.!?])\s+/).filter(Boolean);
+    const intro = sentences[0] ?? summary;
+    const body = sentences.slice(1).join(" ") || summary;
+    const technologies = resume.technologies.length > 0 ? resume.technologies : resume.skills.flatMap((g) => g.skills);
+
     sections.about = {
       title: "About Me",
-      content: summary,
+      content: body,
+      intro,
+      highlights: (resume.achievements ?? []).slice(0, 4).map((a) => a.title).filter(Boolean),
+      strengths: buildAboutStrengths(resume, role),
+      metrics: buildAboutMetrics(resume, role),
     };
+
+    void technologies;
   }
 
   if (resume.skills.length > 0 || resume.technologies.length > 0) {
@@ -409,6 +591,9 @@ function buildPortfolioData(resume: ResumeJSON): PortfolioObject {
       description: p.description ?? (p.highlights && p.highlights.length > 0 ? p.highlights.join(". ") : undefined),
       tags: p.technologies ?? [],
       link: p.link,
+      features: p.highlights && p.highlights.length > 0 ? p.highlights : undefined,
+      liveUrl: p.link,
+      repoUrl: p.githubUrl ?? p.link,
     }));
   }
 
@@ -418,8 +603,10 @@ function buildPortfolioData(resume: ResumeJSON): PortfolioObject {
       role: e.title,
       startDate: e.startDate,
       endDate: e.current ? "Present" : e.endDate,
-      description: [e.description, ...(e.highlights ?? [])].filter(Boolean).join(" "),
+      description: e.description ?? undefined,
       current: e.current,
+      highlights: e.highlights && e.highlights.length > 0 ? e.highlights : undefined,
+      technologies: e.technologies && e.technologies.length > 0 ? e.technologies : undefined,
     }));
   }
 
@@ -503,6 +690,8 @@ function buildPortfolioData(resume: ResumeJSON): PortfolioObject {
     availableFor: role,
   };
 
+  sections.metrics = buildAboutMetrics(resume, role);
+
   return {
     personalInfo: {
       name,
@@ -511,6 +700,7 @@ function buildPortfolioData(resume: ResumeJSON): PortfolioObject {
       bio: summary,
       email: resume.personal.email,
       location: resume.personal.location,
+      tech: [...new Set(resume.technologies.concat(resume.skills.flatMap((g) => g.skills)))].slice(0, 8),
     },
     sections,
     theme: { mode: "dark" },

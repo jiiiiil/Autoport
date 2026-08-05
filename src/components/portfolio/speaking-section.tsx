@@ -19,10 +19,10 @@ export function SpeakingSection({ portfolio }: { portfolio: PortfolioObject; sec
             <div className="w-10 h-10 rounded-lg bg-[var(--p-primary)]/10 flex items-center justify-center shrink-0">
               <Mic className="w-5 h-5 text-[var(--p-primary)]" />
             </div>
-            <div className="flex-1">
-              <h3 className="text-base font-semibold text-[var(--p-text)]">{s.topic}</h3>
+            <div className="flex-1 min-w-0">
+              <h3 className="text-base font-semibold text-[var(--p-text)] break-words">{s.topic}</h3>
               {s.event && (
-                <p className="text-xs text-[var(--p-primary)]">{s.event}</p>
+                <p className="text-xs text-[var(--p-primary)] break-words">{s.event}</p>
               )}
               <div className="flex items-center gap-3 mt-1">
                 {s.date && <span className="text-xs text-[var(--p-text-muted)]">{s.date}</span>}

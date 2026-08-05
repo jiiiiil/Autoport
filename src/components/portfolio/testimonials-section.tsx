@@ -2,15 +2,18 @@
 
 import type { PortfolioObject } from "@/lib/portfolio/types";
 import { Star } from "lucide-react";
+import { useSectionGrid } from "@/hooks/use-layout-fit";
 
 export function TestimonialsSection({ portfolio }: { portfolio: PortfolioObject; sectionKey: string }) {
   const testimonials = portfolio.sections?.testimonials;
   if (!testimonials || testimonials.length === 0) return null;
 
+  const { gridClass, clampClass } = useSectionGrid(portfolio, "testimonials", "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5");
+
   return (
     <section id="testimonials" className="px-6 py-16">
       <h2 className="text-2xl md:text-3xl font-bold text-[var(--p-text)] mb-8">Testimonials</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div className={gridClass}>
         {testimonials.map((t, i) => (
           <div
             key={i}
@@ -23,7 +26,7 @@ export function TestimonialsSection({ portfolio }: { portfolio: PortfolioObject;
                 ))}
               </div>
             )}
-            <p className="text-sm text-[var(--p-text-muted)] mb-4 leading-relaxed italic">
+            <p className={`text-sm text-[var(--p-text-muted)] mb-4 leading-relaxed italic break-words ${clampClass ?? ""}`}>
               &ldquo;{t.content}&rdquo;
             </p>
             <div>

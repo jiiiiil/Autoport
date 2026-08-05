@@ -1,0 +1,24 @@
+▲ Next.js 16.2.11 (Turbopack)
+- Local:         http://localhost:3459
+- Network:       http://172.20.10.2:3459
+- Environments: .env
+✓ Ready in 1270ms
+
+(node:8748) Warning: SECURITY WARNING: The SSL modes 'prefer', 'require', and 'verify-ca' are treated as aliases for 'verify-full'.
+In the next major version (pg-connection-string v3.0.0 and pg v9.0.0), these modes will adopt standard libpq semantics, which have weaker security guarantees.
+
+To prepare for this change:
+- If you want the current behavior, explicitly use 'sslmode=verify-full'
+- If you want libpq compatibility now, use 'uselibpqcompat=true&sslmode=require'
+
+See https://www.postgresql.org/docs/current/libpq-ssl.html for libpq SSL mode definitions.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ GET /api/health 200 in 2.7s (next.js: 1972ms, application-code: 679ms)
+[2026-08-02T06:31:13.865Z] [INFO] [API] Health check completed { status: 'healthy' }
+[2026-08-02T06:31:14.888Z] [INFO] [API] Health check completed { status: 'healthy' }
+ GET /api/health 200 in 1359ms (next.js: 24ms, application-code: 1335ms)
+[2026-08-02T06:31:16.095Z] [INFO] [API] Parsing resume PDF: "test-resume.pdf" (2341 bytes) 
+[2026-08-02T06:31:20.663Z] [INFO] [API] Resume parsed in 4592ms — 2 experiences, 1 educations, 4 skill groups 
+ POST /api/resume/parse 200 in 4.8s (next.js: 190ms, application-code: 4.6s)
+[2026-08-02T06:31:22.269Z] [INFO] [API] Resume generation: "John Developer" theme=dark-blue animation=medium 
+ POST /api/generate 201 in 2.5s (next.js: 1541ms, application-code: 936ms)

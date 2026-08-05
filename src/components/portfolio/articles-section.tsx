@@ -2,15 +2,18 @@
 
 import type { PortfolioObject } from "@/lib/portfolio/types";
 import { ExternalLink, BookOpen } from "lucide-react";
+import { useSectionGrid } from "@/hooks/use-layout-fit";
 
 export function ArticlesSection({ portfolio }: { portfolio: PortfolioObject; sectionKey: string }) {
   const articles = portfolio.sections?.articles;
   if (!articles || articles.length === 0) return null;
 
+  const { gridClass, clampClass } = useSectionGrid(portfolio, "articles", "grid grid-cols-1 md:grid-cols-2 gap-5");
+
   return (
     <section id="articles" className="px-6 py-16">
       <h2 className="text-2xl md:text-3xl font-bold text-[var(--p-text)] mb-8">Articles</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <div className={gridClass}>
         {articles.map((a, i) => (
           <div
             key={i}
@@ -19,10 +22,10 @@ export function ArticlesSection({ portfolio }: { portfolio: PortfolioObject; sec
             <div className="w-10 h-10 rounded-lg bg-[var(--p-primary)]/10 flex items-center justify-center shrink-0">
               <BookOpen className="w-5 h-5 text-[var(--p-primary)]" />
             </div>
-            <div className="flex-1">
-              <h3 className="text-base font-semibold text-[var(--p-text)] mb-1">{a.title}</h3>
+            <div className="flex-1 min-w-0">
+              <h3 className="text-base font-semibold text-[var(--p-text)] mb-1 break-words">{a.title}</h3>
               {a.excerpt && (
-                <p className="text-sm text-[var(--p-text-muted)] leading-relaxed mb-2">{a.excerpt}</p>
+                <p className={`text-sm text-[var(--p-text-muted)] leading-relaxed mb-2 break-words ${clampClass ?? ""}`}>{a.excerpt}</p>
               )}
               <div className="flex items-center gap-3">
                 {a.date && <span className="text-xs text-[var(--p-text-muted)]">{a.date}</span>}

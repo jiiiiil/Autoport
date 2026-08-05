@@ -1,12 +1,25 @@
 export type ThemeName =
-  | "dark-blue"
-  | "dark-red"
   | "black"
-  | "purple"
-  | "green"
+  | "white"
+  | "dark-blue"
+  | "minimal-light"
   | "custom";
 
 export type AnimationLevel = "minimal" | "medium" | "heavy";
+
+export type MotionStylePreset = "quantum" | "glitch" | "magnetic" | "parallax" | "stagger" | "apple" | "roll3d" | "minimal";
+export type CardStylePreset = "tilt3d" | "cyber-glass" | "shimmer-beam" | "magnetic-glow" | "holographic" | "soft-shadow" | "dual-ring" | "minimal";
+export type ButtonStylePreset = "liquid-gradient" | "magnetic-pill" | "neon-pulse" | "glass-reflect" | "shimmer-border" | "elastic-bounce" | "underline-glow";
+export type CanvasStylePreset = "three-particles" | "cosmic-mesh" | "aurora" | "grid-matrix" | "blobs" | "minimal";
+export type MascotOptionPreset = "enabled-byte" | "enabled-minimal" | "disabled";
+
+export interface AnimationPresetOptions {
+  motionStyle: MotionStylePreset;
+  cardStyle: CardStylePreset;
+  buttonStyle: ButtonStylePreset;
+  canvasStyle: CanvasStylePreset;
+  mascotOption: MascotOptionPreset;
+}
 
 export type PortfolioType =
   | "developer"
@@ -47,6 +60,7 @@ export interface ResumeExperience {
   current?: boolean;
   description?: string;
   highlights?: string[];
+  technologies?: string[];
 }
 
 export interface ResumeEducation {
@@ -57,12 +71,14 @@ export interface ResumeEducation {
   endDate?: string;
   score?: string;
   description?: string;
+  achievements?: string[];
 }
 
 export interface ResumeProject {
   name: string;
   description?: string;
   link?: string;
+  githubUrl?: string;
   technologies?: string[];
   highlights?: string[];
 }

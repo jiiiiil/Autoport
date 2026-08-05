@@ -15,23 +15,20 @@ export function SocialLinksSection({ portfolio }: { portfolio: PortfolioObject; 
   if (!socialLinks || socialLinks.length === 0) return null;
 
   return (
-    <section id="social-links" className="px-6 py-16">
-      <h2 className="text-2xl md:text-3xl font-bold text-[var(--p-text)] mb-8">
-        Connect
-      </h2>
-      <div className="flex flex-wrap gap-3">
+    <section id="social-links" className="py-10">
+      <div className="flex flex-wrap items-center justify-center gap-3">
         {socialLinks.map((link) => (
           <a
             key={link.platform}
             href={link.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-[var(--p-border)] bg-[var(--p-bg-card)] text-sm text-[var(--p-text-muted)] hover:border-[var(--p-primary)] hover:text-[var(--p-text)] transition-all duration-300"
+            className="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-xl border border-[var(--p-border)] bg-[var(--p-bg-card)] text-xs md:text-sm font-medium text-[var(--p-text-secondary)] hover:border-[var(--p-primary)] hover:text-[var(--p-text)] hover:bg-[var(--p-bg-card-hover)] transition-all duration-300 shadow-xs"
           >
-            <span className="w-6 h-6 rounded-md bg-[var(--p-primary)]/10 text-[var(--p-primary)] text-[10px] font-bold flex items-center justify-center">
+            <span className="w-6 h-6 rounded-md bg-[var(--p-primary-soft)] text-[var(--p-primary)] text-[11px] font-mono font-bold flex items-center justify-center">
               {ICONS[link.platform] ?? link.platform.slice(0, 2).toUpperCase()}
             </span>
-            {link.platform}
+            <span>{link.platform}</span>
           </a>
         ))}
       </div>

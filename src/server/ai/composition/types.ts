@@ -42,6 +42,23 @@ export type ResponsiveStrategy =
   | "mobile-first" | "desktop-first" | "adaptive" | "fluid"
   | "container-queries" | "hybrid";
 
+export interface SectionDesignDirectives {
+  hierarchy: "standard" | "hero-focused" | "quiet";
+  cardStyle: "default" | "glass" | "gradient-border" | "elevated";
+  density: "spacious" | "balanced" | "dense";
+  whitespace: "large" | "medium" | "compact";
+  decor: string[];
+  content: {
+    eyebrow?: string;
+    subtitle?: string;
+    showMetrics?: boolean;
+    showHighlights?: boolean;
+    showTechnologies?: boolean;
+    showActions?: boolean;
+    align: "center" | "left";
+  };
+}
+
 export interface ComposedSection {
   id: string;
   name: string;
@@ -58,6 +75,7 @@ export interface ComposedSection {
   contentRequirements: string[];
   visualWeight: "primary" | "secondary" | "tertiary" | "accent";
   metadata: Record<string, unknown>;
+  design?: SectionDesignDirectives;
 }
 
 export interface ComposedLayout {
@@ -104,6 +122,21 @@ export interface ComposedTheme {
     error: string;
     info: string;
     overlay: string;
+    primaryHover?: string;
+    primaryActive?: string;
+    primarySoft?: string;
+    primarySofter?: string;
+    ring?: string;
+    onPrimary?: string;
+    onAccent?: string;
+    onSurface?: string;
+    surfaceHover?: string;
+    surfaceActive?: string;
+    successSoft?: string;
+    warningSoft?: string;
+    errorSoft?: string;
+    infoSoft?: string;
+    shadowColor?: string;
   };
   typography: {
     headingFont: string;
@@ -128,6 +161,18 @@ export interface ComposedTheme {
   borders: Record<string, string>;
   transitionDurations: Record<string, string>;
   zIndex: Record<string, number>;
+  fontScale?: Record<string, string>;
+  fontWeight?: Record<string, number>;
+  lineHeight?: Record<string, string>;
+  letterSpacing?: Record<string, string>;
+  blur?: Record<string, string>;
+  glass?: Record<string, string>;
+  elevation?: Record<string, string>;
+  opacity?: Record<string, number>;
+  grid?: Record<string, string | number>;
+  containerWidths?: Record<string, string>;
+  breakpoints?: Record<string, string>;
+  transitionCurves?: Record<string, string>;
 }
 
 export interface ComposedMotion {

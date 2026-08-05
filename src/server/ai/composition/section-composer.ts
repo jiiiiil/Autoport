@@ -29,13 +29,13 @@ const SECTION_TEMPLATES: Record<string, SectionTemplate> = {
   },
   projects: {
     id: "projects", name: "Projects", componentName: "ProjectsSection",
-    defaultPriority: 3, defaultVariant: "card", defaultLayout: "grid",
-    visualWeight: "primary", contentRequirements: ["project-list", "descriptions", "links"],
+    defaultPriority: 3, defaultVariant: "bento", defaultLayout: "bento-grid",
+    visualWeight: "primary", contentRequirements: ["project-list", "descriptions", "links", "features", "tech-tags"],
     storytellingRole: "proof-of-work",
   },
   skills: {
     id: "skills", name: "Skills", componentName: "SkillsSection",
-    defaultPriority: 4, defaultVariant: "pills", defaultLayout: "grid",
+    defaultPriority: 4, defaultVariant: "cards", defaultLayout: "grid",
     visualWeight: "secondary", contentRequirements: ["skill-categories", "proficiency-levels"],
     storytellingRole: "capability-demonstration",
   },

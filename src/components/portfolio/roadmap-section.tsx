@@ -14,8 +14,8 @@ export function RoadmapSection({ portfolio }: { portfolio: PortfolioObject; sect
   };
 
   const statusColors: Record<string, string> = {
-    completed: "text-emerald-400",
-    "in-progress": "text-amber-400",
+    completed: "text-[var(--p-success)]",
+    "in-progress": "text-[var(--p-warning)]",
     upcoming: "text-[var(--p-text-muted)]",
   };
 

@@ -119,16 +119,25 @@ Return ONLY a valid JSON object (no markdown, no code fences, no explanations) w
     "tagline": "string",
     "bio": "string",
     "email": "string",
-    "location": "string"
+    "phone": "string",
+    "location": "string",
+    "tech": ["string"]
   },
   "sections": {
     "hero": { "headline": "string", "subheadline": "string", "ctaText": "string", "ctaLink": "#projects" },
-    "about": { "title": "About Me", "content": "string" },
+    "about": {
+      "title": "About Me",
+      "content": "string",
+      "intro": "string",
+      "highlights": ["string"],
+      "strengths": [{ "label": "string", "detail": "string" }],
+      "metrics": [{ "label": "string", "value": "string" }]
+    },
     "skills": [{ "name": "string", "level": "advanced", "category": "string" }],
-    "projects": [{ "title": "string", "description": "string", "tags": ["string"], "link": "string" }],
-    "experience": [{ "company": "string", "role": "string", "startDate": "string", "endDate": "string", "description": "string" }],
-    "education": [{ "institution": "string", "degree": "string", "field": "string", "startDate": "string", "endDate": "string" }],
-    "achievements": [{ "title": "string", "description": "string" }],
+    "projects": [{ "title": "string", "description": "string", "tags": ["string"], "link": "string", "githubUrl": "string", "features": ["string"] }],
+    "experience": [{ "company": "string", "role": "string", "startDate": "string", "endDate": "string", "description": "string", "highlights": ["string"], "technologies": ["string"] }],
+    "education": [{ "institution": "string", "degree": "string", "field": "string", "startDate": "string", "endDate": "string", "achievements": ["string"] }],
+    "achievements": [{ "title": "string", "description": "string", "metric": "string" }],
     "certifications": [{ "name": "string", "issuer": "string", "date": "string" }],
     "socialLinks": [{ "platform": "string", "url": "string" }],
     "contact": { "email": "string", "location": "string", "availableFor": "string" }
@@ -280,11 +289,11 @@ JSON STRUCTURE:
   "personalInfo": { "name": "string", "role": "string", "tagline": "string", "bio": "string (2-3 sentences)", "email": "string", "location": "string" },
   "sections": {
     "hero": { "headline": "string", "subheadline": "string", "ctaText": "string", "ctaLink": "#section-id" },
-    "about": { "title": "About Me", "content": "string (2-3 paragraphs about the person)" },
+    "about": { "title": "About Me", "content": "string (2-3 paragraphs about the person)", "intro": "string (one punchy lead sentence)", "highlights": ["string (top achievements/impact, 2-4)"], "strengths": [{ "label": "string", "detail": "string" }], "metrics": [{ "label": "string", "value": "string" }] },
     "skills": [{ "name": "string", "level": "beginner|intermediate|advanced|expert", "category": "string" }],
-    "projects": [{ "title": "string", "description": "string (1-2 sentences)", "tags": ["string"], "link": "string" }],
-    "experience": [{ "company": "string", "role": "string", "startDate": "string", "endDate": "string", "description": "string", "current": boolean }],
-    "education": [{ "institution": "string", "degree": "string", "field": "string", "startDate": "string", "endDate": "string" }],
+    "projects": [{ "title": "string", "description": "string (1-2 sentences)", "tags": ["string"], "link": "string", "githubUrl": "string", "features": ["string (key outcomes/features, 2-4)"] }],
+    "experience": [{ "company": "string", "role": "string", "startDate": "string", "endDate": "string", "description": "string", "current": boolean, "highlights": ["string (concrete achievements, 2-4)"], "technologies": ["string"] }],
+    "education": [{ "institution": "string", "degree": "string", "field": "string", "startDate": "string", "endDate": "string", "achievements": ["string"] }],
     "achievements": [{ "title": "string", "description": "string" }],
     "certifications": [{ "name": "string", "issuer": "string", "date": "string" }],
     "socialLinks": [{ "platform": "GitHub|LinkedIn|Twitter|Dribbble|Behance|Medium|Dev.to", "url": "https://..." }],

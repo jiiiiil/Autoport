@@ -1,18 +1,43 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Palette } from "lucide-react";
+import { Check, Palette, Moon, Sun } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { THEME_PRESETS, type ThemePreset } from "@/server/resume/themes";
 import { useResumeStore } from "@/lib/resume-store";
+import type { ThemeName } from "@/server/resume/types";
+
+interface PrimaryThemeOption {
+  id: ThemeName;
+  label: string;
+  description: string;
+  icon: typeof Moon;
+  swatch: string[];
+}
+
+const PRIMARY_THEMES: PrimaryThemeOption[] = [
+  {
+    id: "black",
+    label: "Black (Pure Dark Neumorphic)",
+    description: "Deep obsidian dark background with bold white h1 headings & pure white text.",
+    icon: Moon,
+    swatch: ["#050508", "#0e0e14", "#ffffff", "#00f0ff"],
+  },
+  {
+    id: "white",
+    label: "White (Pure Light Neumorphic)",
+    description: "Crisp white background with bold black h1 headings & pure black text.",
+    icon: Sun,
+    swatch: ["#ffffff", "#f4f6f9", "#000000", "#18181b"],
+  },
+];
 
 const CUSTOM_FIELDS: { key: "primary" | "secondary" | "accent" | "background" | "surface" | "text"; label: string }[] = [
-  { key: "primary", label: "Primary" },
-  { key: "secondary", label: "Secondary" },
-  { key: "accent", label: "Accent" },
+  { key: "primary", label: "Primary Accent" },
+  { key: "secondary", label: "Secondary Accent" },
+  { key: "accent", label: "Glow Accent" },
   { key: "background", label: "Background" },
-  { key: "surface", label: "Surface" },
-  { key: "text", label: "Text" },
+  { key: "surface", label: "Card Surface" },
+  { key: "text", label: "Text Color" },
 ];
 
 export function ThemeSelector() {
@@ -21,13 +46,17 @@ export function ThemeSelector() {
 
   return (
     <div>
-      <div className="flex items-center gap-2 mb-4">
-        <Palette className="w-4 h-4 text-primary" />
-        <h3 className="text-sm font-semibold text-white">Theme</h3>
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <Palette className="w-4 h-4 text-purple-400" />
+          <h3 className="text-sm font-semibold text-white">Theme Palette</h3>
+        </div>
+        <span className="text-[11px] font-mono text-purple-300/70">Dark & Light options</span>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-        {THEME_PRESETS.map((preset: ThemePreset) => {
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {PRIMARY_THEMES.map((preset) => {
+          const Icon = preset.icon;
           const active = theme === preset.id;
           return (
             <button
@@ -35,51 +64,78 @@ export function ThemeSelector() {
               type="button"
               onClick={() => {
                 setTheme(preset.id);
-                if (preset.id === "custom") setShowCustom(true);
+                setShowCustom(false);
               }}
               className={cn(
-                "group rounded-2xl border p-3 text-left transition-all duration-200 cursor-pointer",
+                "group relative rounded-2xl border p-4 text-left transition-all duration-300 cursor-pointer overflow-hidden",
                 active
-                  ? "border-primary bg-primary/10"
+                  ? "border-purple-500 bg-purple-950/40 shadow-lg shadow-purple-950/50"
                   : "border-white/10 bg-white/[0.03] hover:border-white/25 hover:bg-white/[0.06]"
               )}
             >
               <div className="flex items-start justify-between mb-3">
-                <div className="flex">
-                  {preset.swatch.map((color, i) => (
-                    <span
-                      key={color}
-                      className="w-5 h-5 rounded-full border border-white/20 -ml-1.5 first:ml-0"
-                      style={{ background: color, zIndex: 5 - i }}
-                    />
-                  ))}
+                <div className="flex items-center gap-3">
+                  <div
+                    className={cn(
+                      "w-9 h-9 rounded-xl flex items-center justify-center transition-colors",
+                      active ? "bg-purple-500/20 text-purple-300" : "bg-white/5 text-text-muted"
+                    )}
+                  >
+                    <Icon className="w-4.5 h-4.5" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-white">{preset.label}</p>
+                    <div className="flex gap-1.5 mt-1">
+                      {preset.swatch.map((color) => (
+                        <span
+                          key={color}
+                          className="w-3.5 h-3.5 rounded-full border border-white/20"
+                          style={{ background: color }}
+                        />
+                      ))}
+                    </div>
+                  </div>
                 </div>
+
                 {active && (
-                  <span className="flex items-center justify-center w-5 h-5 rounded-full bg-primary text-white">
+                  <span className="flex items-center justify-center w-5 h-5 rounded-full bg-purple-500 text-white shadow-xs">
                     <Check className="w-3 h-3" />
                   </span>
                 )}
               </div>
-              <p className="text-sm font-medium text-white">{preset.label}</p>
-              <p className="text-[10px] text-text-muted leading-snug mt-1">{preset.description}</p>
+              <p className="text-xs text-text-muted leading-relaxed">{preset.description}</p>
             </button>
           );
         })}
       </div>
 
+      {/* Custom Palette Toggle */}
+      <div className="mt-3 text-right">
+        <button
+          type="button"
+          onClick={() => {
+            setShowCustom(!showCustom);
+            if (!showCustom) setTheme("custom");
+          }}
+          className="text-xs font-mono text-purple-300/80 hover:text-purple-200 transition-colors underline cursor-pointer"
+        >
+          {showCustom ? "Hide Custom Palette" : "+ Customize Specific Colors"}
+        </button>
+      </div>
+
       {showCustom && (
-        <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-          <p className="text-xs font-medium text-text-muted mb-3">
-            Custom colors — applied when using the Custom theme
+        <div className="mt-4 rounded-2xl border border-purple-500/20 bg-purple-950/20 p-4 backdrop-blur-md">
+          <p className="text-xs font-medium text-purple-300/80 mb-3">
+            Custom Accent Tuning
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {CUSTOM_FIELDS.map((field) => (
               <label key={field.key} className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="color"
-                  value={customColors[field.key] ?? "#3b82f6"}
+                  value={customColors[field.key] ?? "#9333ea"}
                   onChange={(e) => setCustomColors({ ...customColors, [field.key]: e.target.value })}
-                  className="w-8 h-8 rounded-lg border border-white/20 bg-transparent cursor-pointer"
+                  className="w-7 h-7 rounded-lg border border-white/20 bg-transparent cursor-pointer"
                 />
                 <span className="text-xs text-text-muted">{field.label}</span>
               </label>

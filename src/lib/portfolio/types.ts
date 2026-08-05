@@ -4,8 +4,10 @@ export interface PortfolioPersonalInfo {
   tagline?: string;
   bio?: string;
   email?: string;
+  phone?: string;
   location?: string;
   avatar?: string;
+  tech?: string[];
 }
 
 export interface PortfolioHero {
@@ -27,6 +29,9 @@ export interface PortfolioProject {
   tags?: string[];
   link?: string;
   image?: string;
+  features?: string[];
+  liveUrl?: string;
+  repoUrl?: string;
 }
 
 export interface PortfolioExperience {
@@ -35,7 +40,10 @@ export interface PortfolioExperience {
   startDate?: string;
   endDate?: string;
   description?: string;
+  location?: string;
   current?: boolean;
+  highlights?: string[];
+  technologies?: string[];
 }
 
 export interface PortfolioEducation {
@@ -44,12 +52,16 @@ export interface PortfolioEducation {
   field?: string;
   startDate?: string;
   endDate?: string;
+  description?: string;
+  grade?: string;
+  achievements?: string[];
 }
 
 export interface PortfolioAchievement {
   title: string;
   date?: string;
   description?: string;
+  metric?: string;
 }
 
 export interface PortfolioCertification {
@@ -167,7 +179,7 @@ export interface PortfolioContact {
   availableFor?: string;
 }
 
-export type ThemeMode = "dark" | "light" | "red" | "futuristic";
+export type ThemeMode = "dark" | "light" | "black" | "white";
 
 export interface PortfolioTheme {
   mode: ThemeMode;
@@ -198,9 +210,18 @@ export interface PortfolioSEO {
   keywords?: string[];
 }
 
+export interface PortfolioAbout {
+  title?: string;
+  content?: string;
+  intro?: string;
+  highlights?: string[];
+  strengths?: { label: string; detail?: string }[];
+  metrics?: { label: string; value: string }[];
+}
+
 export interface PortfolioSections {
   hero?: PortfolioHero;
-  about?: { title?: string; content?: string };
+  about?: PortfolioAbout;
   skills?: PortfolioSkill[];
   projects?: PortfolioProject[];
   experience?: PortfolioExperience[];

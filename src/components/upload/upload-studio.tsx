@@ -105,9 +105,6 @@ export function UploadStudio() {
                   <ThemeSelector />
                 </FadeIn>
                 <FadeIn delay={0.2}>
-                  <AnimationSelector />
-                </FadeIn>
-                <FadeIn delay={0.3}>
                   <GeneratePanel />
                 </FadeIn>
               </div>

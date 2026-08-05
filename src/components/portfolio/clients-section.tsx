@@ -1,15 +1,18 @@
 "use client";
 
 import type { PortfolioObject } from "@/lib/portfolio/types";
+import { useSectionGrid } from "@/hooks/use-layout-fit";
 
 export function ClientsSection({ portfolio }: { portfolio: PortfolioObject; sectionKey: string }) {
   const clients = portfolio.sections?.clients;
   if (!clients || clients.length === 0) return null;
 
+  const { gridClass } = useSectionGrid(portfolio, "clients", "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4");
+
   return (
     <section id="clients" className="px-6 py-16">
       <h2 className="text-2xl md:text-3xl font-bold text-[var(--p-text)] mb-8">Clients</h2>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div className={gridClass}>
         {clients.map((c, i) => (
           <div
             key={i}

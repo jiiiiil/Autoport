@@ -3,11 +3,14 @@
 import type { PortfolioObject } from "@/lib/portfolio/types";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
+import { useSectionGrid } from "@/hooks/use-layout-fit";
 
 export function FaqSection({ portfolio }: { portfolio: PortfolioObject; sectionKey: string }) {
   const faq = portfolio.sections?.faq;
   if (!faq || faq.length === 0) return null;
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+  const { clampClass } = useSectionGrid(portfolio, "faq", "space-y-3 max-w-2xl mx-auto");
 
   return (
     <section id="faq" className="px-6 py-16">
@@ -30,7 +33,7 @@ export function FaqSection({ portfolio }: { portfolio: PortfolioObject; sectionK
             </button>
             {openIndex === i && (
               <div className="px-5 pb-5">
-                <p className="text-sm text-[var(--p-text-muted)] leading-relaxed">{item.answer}</p>
+                <p className={`text-sm text-[var(--p-text-muted)] leading-relaxed break-words ${clampClass ?? ""}`}>{item.answer}</p>
               </div>
             )}
           </div>

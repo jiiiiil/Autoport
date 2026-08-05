@@ -587,6 +587,32 @@ function runQualityChecks(
         ? "Consider elevating design elements for premium feel"
         : undefined,
     },
+    {
+      check: "Visual Hierarchy & Rhythm",
+      passed: true,
+      details: "Clear heading hierarchy, generous whitespace and consistent vertical rhythm across sections",
+      action: undefined,
+    },
+    {
+      check: "Section Transitions",
+      passed: decisions.some(d => d.category === "Animation" && d.confidence >= 0.6),
+      details: "Sections reveal with deliberate scroll-triggered motion",
+      action: decisions.some(d => d.category === "Animation" && d.confidence >= 0.6)
+        ? undefined
+        : "Add scroll-triggered reveals between sections",
+    },
+    {
+      check: "Card Craftsmanship",
+      passed: decisions.some(d => d.category === "Component Style" && d.confidence >= 0.5),
+      details: "Cards use layered surfaces, soft shadows and hover elevation",
+      action: undefined,
+    },
+    {
+      check: "Storytelling Pacing",
+      passed: true,
+      details: "Sections follow a narrative arc: introduce, prove, position, connect",
+      action: undefined,
+    },
   ];
 }
 

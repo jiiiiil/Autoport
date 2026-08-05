@@ -134,6 +134,7 @@ function sanitizeResume(raw: Record<string, unknown>): Partial<ResumeJSON> {
       current: asBool(e.current),
       description: asString(e.description),
       highlights: asStringArray(e.highlights),
+      technologies: asStringArray(e.technologies),
     })),
     education: education.map((e) => ({
       institution: asString(e.institution),
@@ -143,11 +144,13 @@ function sanitizeResume(raw: Record<string, unknown>): Partial<ResumeJSON> {
       endDate: asString(e.endDate),
       score: asString(e.score) || asString(e.gpa),
       description: asString(e.description),
+      achievements: asStringArray(e.achievements),
     })),
     projects: projects.map((p) => ({
       name: asString(p.name) || asString(p.title),
       description: asString(p.description),
       link: asString(p.link),
+      githubUrl: asString(p.githubUrl),
       technologies: asStringArray(p.technologies),
       highlights: asStringArray(p.highlights),
     })),

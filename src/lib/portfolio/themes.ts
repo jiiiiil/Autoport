@@ -1,95 +1,94 @@
 import type { ThemeMode } from "./types";
 import type { ComposedTheme } from "@/server/ai/composition/types";
+import { composedThemeToTokens } from "@/design-system/composition";
+import { designTokensToCssVars } from "@/design-system/css";
 
 type ThemeVars = Record<string, string>;
 
+  const BLACK_THEME_VARS: ThemeVars = {
+  "--p-bg": "#050508",
+  "--p-bg-card": "#0e0e14",
+  "--p-bg-card-hover": "#161620",
+  "--p-border": "#222230",
+  "--p-border-subtle": "#141420",
+  "--p-text": "#ffffff",
+  "--p-text-muted": "#94a3b8",
+  "--p-text-secondary": "#e2e8f0",
+  "--p-primary": "#ffffff",
+  "--p-primary-soft": "rgba(255, 255, 255, 0.12)",
+  "--p-primary-softer": "rgba(255, 255, 255, 0.06)",
+  "--p-secondary": "#94a3b8",
+  "--p-accent": "#ffffff",
+  "--p-gradient-from": "#ffffff",
+  "--p-gradient-via": "#e2e8f0",
+  "--p-gradient-to": "#ffffff",
+  "--p-code-bg": "#050508",
+  "--p-code-border": "#1e1e2d",
+  "--neu-outset": "6px 6px 14px #030305, -6px -6px 14px #191925",
+  "--neu-inset": "inset 4px 4px 8px #030305, inset -4px -4px 8px #191925",
+};
+
+const WHITE_THEME_VARS: ThemeVars = {
+  "--p-bg": "#ffffff",
+  "--p-bg-card": "#ffffff",
+  "--p-bg-card-hover": "#f4f6f9",
+  "--p-border": "#e2e8f0",
+  "--p-border-subtle": "#f1f5f9",
+  "--p-text": "#000000",
+  "--p-text-muted": "#475569",
+  "--p-text-secondary": "#1e293b",
+  "--p-primary": "#000000",
+  "--p-primary-soft": "rgba(0, 0, 0, 0.08)",
+  "--p-primary-softer": "rgba(0, 0, 0, 0.04)",
+  "--p-secondary": "#334155",
+  "--p-accent": "#2563eb",
+  "--p-gradient-from": "#000000",
+  "--p-gradient-via": "#1e293b",
+  "--p-gradient-to": "#000000",
+  "--p-code-bg": "#f1f5f9",
+  "--p-code-border": "#e2e8f0",
+  "--neu-outset": "8px 8px 18px #d1d5db, -8px -8px 18px #ffffff",
+  "--neu-inset": "inset 4px 4px 10px #d1d5db, inset -4px -4px 10px #ffffff",
+};
+
 const FALLBACK_THEMES: Record<ThemeMode, ThemeVars> = {
-  dark: {
-    "--p-bg": "#0f0f0f",
-    "--p-bg-card": "#1a1a1a",
-    "--p-bg-card-hover": "#222222",
-    "--p-border": "#2a2a2a",
-    "--p-text": "#ffffff",
-    "--p-text-muted": "#a0a0a0",
-    "--p-primary": "#7c3aed",
-    "--p-accent": "#06b6d4",
-    "--p-gradient-from": "#7c3aed",
-    "--p-gradient-via": "#06b6d4",
-    "--p-gradient-to": "#7c3aed",
-    "--p-code-bg": "#0a0a0a",
-    "--p-code-border": "#1e1e1e",
-  },
-  light: {
-    "--p-bg": "#fafafa",
-    "--p-bg-card": "#ffffff",
-    "--p-bg-card-hover": "#f5f5f5",
-    "--p-border": "#e5e5e5",
-    "--p-text": "#171717",
-    "--p-text-muted": "#737373",
-    "--p-primary": "#7c3aed",
-    "--p-accent": "#06b6d4",
-    "--p-gradient-from": "#7c3aed",
-    "--p-gradient-via": "#06b6d4",
-    "--p-gradient-to": "#7c3aed",
-    "--p-code-bg": "#f5f5f5",
-    "--p-code-border": "#e5e5e5",
-  },
-  red: {
-    "--p-bg": "#1a0a0a",
-    "--p-bg-card": "#2a1010",
-    "--p-bg-card-hover": "#3a1818",
-    "--p-border": "#3d1f1f",
-    "--p-text": "#ffffff",
-    "--p-text-muted": "#d4a0a0",
-    "--p-primary": "#ef4444",
-    "--p-accent": "#f97316",
-    "--p-gradient-from": "#ef4444",
-    "--p-gradient-via": "#f97316",
-    "--p-gradient-to": "#ef4444",
-    "--p-code-bg": "#1a0808",
-    "--p-code-border": "#2a1010",
-  },
-  futuristic: {
-    "--p-bg": "#050a18",
-    "--p-bg-card": "#0c1428",
-    "--p-bg-card-hover": "#121e38",
-    "--p-border": "#1a2a4a",
-    "--p-text": "#e8f0ff",
-    "--p-text-muted": "#7090c0",
-    "--p-primary": "#00d4ff",
-    "--p-accent": "#a855f7",
-    "--p-gradient-from": "#00d4ff",
-    "--p-gradient-via": "#a855f7",
-    "--p-gradient-to": "#00d4ff",
-    "--p-code-bg": "#080e20",
-    "--p-code-border": "#14203a",
-  },
+  dark: BLACK_THEME_VARS,
+  black: BLACK_THEME_VARS,
+  light: WHITE_THEME_VARS,
+  white: WHITE_THEME_VARS,
 };
 
 export function getThemeStylesFromComposition(theme: ComposedTheme): React.CSSProperties {
+  try {
+    const tokens = composedThemeToTokens(theme);
+    return designTokensToCssVars(tokens) as React.CSSProperties;
+  } catch {
+    // legacy fallback for minimal ComposedTheme shapes
+  }
+
   const vars: Record<string, string> = {};
 
   const colors = theme?.colors;
   if (colors) {
-    vars["--p-bg"] = colors.background ?? "#0f0f0f";
-    vars["--p-bg-card"] = colors.surface ?? "#1a1a1a";
-    vars["--p-bg-card-hover"] = colors.surfaceElevated ?? "#222222";
-    vars["--p-border"] = colors.border ?? "#2a2a2a";
-    vars["--p-border-subtle"] = colors.borderSubtle ?? "#1a1a1a";
+    vars["--p-bg"] = colors.background ?? "#050508";
+    vars["--p-bg-card"] = colors.surface ?? "#0e0e14";
+    vars["--p-bg-card-hover"] = colors.surfaceElevated ?? "#161620";
+    vars["--p-border"] = colors.border ?? "#222230";
+    vars["--p-border-subtle"] = colors.borderSubtle ?? "#141420";
     vars["--p-text"] = colors.text ?? "#ffffff";
-    vars["--p-text-muted"] = colors.textMuted ?? "#a0a0a0";
-    vars["--p-text-secondary"] = colors.textSecondary ?? "#a3a3a3";
-    vars["--p-primary"] = colors.primary ?? "#7c3aed";
-    vars["--p-secondary"] = colors.secondary ?? "#4f46e5";
-    vars["--p-accent"] = colors.accent ?? "#06b6d4";
-    vars["--p-success"] = colors.success ?? "#22c55e";
+    vars["--p-text-muted"] = colors.textMuted ?? "#94a3b8";
+    vars["--p-text-secondary"] = colors.textSecondary ?? "#e2e8f0";
+    vars["--p-primary"] = colors.primary ?? "#ffffff";
+    vars["--p-secondary"] = colors.secondary ?? "#94a3b8";
+    vars["--p-accent"] = colors.accent ?? "#ffffff";
+    vars["--p-success"] = colors.success ?? "#10b981";
     vars["--p-warning"] = colors.warning ?? "#f59e0b";
     vars["--p-error"] = colors.error ?? "#ef4444";
-    vars["--p-info"] = colors.info ?? "#3b82f6";
-    vars["--p-gradient-from"] = colors.primary ?? "#7c3aed";
-    vars["--p-gradient-via"] = colors.accent ?? "#06b6d4";
-    vars["--p-gradient-to"] = colors.primary ?? "#7c3aed";
-    vars["--p-overlay"] = colors.overlay ?? "rgba(0,0,0,0.8)";
+    vars["--p-info"] = colors.info ?? "#ffffff";
+    vars["--p-gradient-from"] = colors.primary ?? "#ffffff";
+    vars["--p-gradient-via"] = colors.accent ?? "#e2e8f0";
+    vars["--p-gradient-to"] = colors.primary ?? "#ffffff";
+    vars["--p-overlay"] = colors.overlay ?? "rgba(0,0,0,0.85)";
   }
 
   if (theme?.gradients) {

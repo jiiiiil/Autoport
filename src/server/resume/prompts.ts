@@ -33,13 +33,13 @@ Return ONLY a valid JSON object with this EXACT structure (no markdown, no code 
     "summary": "string"
   },
   "experience": [
-    { "company": "string", "title": "string", "location": "string", "startDate": "string", "endDate": "string", "current": boolean, "description": "string", "highlights": ["string"] }
+    { "company": "string", "title": "string", "location": "string", "startDate": "string", "endDate": "string", "current": boolean, "description": "string", "highlights": ["string"], "technologies": ["string"] }
   ],
   "education": [
-    { "institution": "string", "degree": "string", "field": "string", "startDate": "string", "endDate": "string", "score": "string", "description": "string" }
+    { "institution": "string", "degree": "string", "field": "string", "startDate": "string", "endDate": "string", "score": "string", "description": "string", "achievements": ["string"] }
   ],
   "projects": [
-    { "name": "string", "description": "string", "link": "string", "technologies": ["string"], "highlights": ["string"] }
+    { "name": "string", "description": "string", "link": "string", "githubUrl": "string", "technologies": ["string"], "highlights": ["string"] }
   ],
   "skills": [
     { "name": "category or 'Skills'", "skills": ["string"] }

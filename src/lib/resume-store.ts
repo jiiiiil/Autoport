@@ -1,7 +1,7 @@
 "use client";
 
 import { create } from "zustand";
-import type { ResumeJSON, ResumeParseReport, PortfolioStrategy, ResumeValidationResult, ThemeName, AnimationLevel } from "@/server/resume/types";
+import type { ResumeJSON, ResumeParseReport, PortfolioStrategy, ResumeValidationResult, ThemeName, AnimationLevel, AnimationPresetOptions } from "@/server/resume/types";
 
 export type UploadStage =
   | "upload"
@@ -25,6 +25,7 @@ export interface ResumeState {
   theme: ThemeName;
   animationLevel: AnimationLevel;
   customColors: { primary?: string; secondary?: string; accent?: string; background?: string; surface?: string; text?: string };
+  presets: AnimationPresetOptions;
 
   generationProgress: number;
   generationStatus: string;
@@ -36,6 +37,7 @@ export interface ResumeState {
   setTheme: (theme: ThemeName) => void;
   setAnimationLevel: (level: AnimationLevel) => void;
   setCustomColors: (colors: ResumeState["customColors"]) => void;
+  setPresetOption: <K extends keyof AnimationPresetOptions>(key: K, value: AnimationPresetOptions[K]) => void;
   setGenerationProgress: (progress: number) => void;
   setGenerationStatus: (status: string) => void;
   setGenerationError: (error: string | null) => void;
@@ -53,9 +55,16 @@ export const useResumeStore = create<ResumeState>((set) => ({
   detectedAsLinkedIn: false,
   detectedPages: null,
 
-  theme: "dark-blue",
+  theme: "black",
   animationLevel: "medium",
   customColors: {},
+  presets: {
+    motionStyle: "quantum",
+    cardStyle: "tilt3d",
+    buttonStyle: "liquid-gradient",
+    canvasStyle: "three-particles",
+    mascotOption: "enabled-byte",
+  },
 
   generationProgress: 0,
   generationStatus: "idle",
@@ -76,6 +85,13 @@ export const useResumeStore = create<ResumeState>((set) => ({
   setTheme: (theme) => set({ theme }),
   setAnimationLevel: (animationLevel) => set({ animationLevel }),
   setCustomColors: (customColors) => set({ customColors }),
+  setPresetOption: (key, value) =>
+    set((state) => ({
+      presets: {
+        ...state.presets,
+        [key]: value,
+      },
+    })),
   setGenerationProgress: (generationProgress) => set({ generationProgress }),
   setGenerationStatus: (generationStatus) => set({ generationStatus }),
   setGenerationError: (generationError) => set({ generationError }),
@@ -90,9 +106,16 @@ export const useResumeStore = create<ResumeState>((set) => ({
       parseDurationMs: null,
       detectedAsLinkedIn: false,
       detectedPages: null,
-      theme: "dark-blue",
+      theme: "black",
       animationLevel: "medium",
       customColors: {},
+      presets: {
+        motionStyle: "quantum",
+        cardStyle: "tilt3d",
+        buttonStyle: "liquid-gradient",
+        canvasStyle: "three-particles",
+        mascotOption: "enabled-byte",
+      },
       generationProgress: 0,
       generationStatus: "idle",
       generationError: null,

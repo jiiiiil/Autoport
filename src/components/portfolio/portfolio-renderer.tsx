@@ -8,6 +8,7 @@ import { getLayoutContainerClass, getSectionSpacing } from "@/lib/portfolio/layo
 import { DynamicNavigation } from "./dynamic-navigation";
 import { renderSection } from "@/lib/portfolio/registry";
 import { CompositionAnimator } from "./composition-animator";
+import { ThreeCanvasBackground } from "./interactive/three-canvas-background";
 
 interface PortfolioRendererProps {
   portfolio: PortfolioObject;
@@ -23,83 +24,16 @@ export function PortfolioRenderer({ portfolio, composition, className }: Portfol
   return <LegacyRenderer portfolio={portfolio} className={className} />;
 }
 
+import { GBAfterlifeBackground } from "./interactive/gb-afterlife-canvas";
+import { AnimeThreeCanvas } from "./interactive/anime-three-canvas";
+import { SvgLiquidFilterProvider } from "./interactive/liquid-image";
+
 function BackgroundDecorations({ theme }: { theme: CompositionGraph["theme"] }) {
-  const style = theme.backgroundStyle || "flat";
-  const colors = theme.colors;
-
-  if (style === "flat") return null;
-
   return (
-    <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10" aria-hidden="true">
-      {style === "mesh-gradient" && (
-        <>
-          <div
-            className="absolute -top-1/4 -left-1/4 w-1/2 h-1/2 rounded-full opacity-20 blur-[120px] animate-[mesh-drift_20s_ease-in-out_infinite]"
-            style={{ background: colors.primary }}
-          />
-          <div
-            className="absolute -bottom-1/4 -right-1/4 w-1/2 h-1/2 rounded-full opacity-15 blur-[120px] animate-[mesh-drift_25s_ease-in-out_infinite_5s]"
-            style={{ background: colors.accent }}
-          />
-          <div
-            className="absolute top-1/3 right-1/4 w-1/3 h-1/3 rounded-full opacity-10 blur-[100px] animate-[mesh-drift_30s_ease-in-out_infinite_10s]"
-            style={{ background: colors.secondary }}
-          />
-        </>
-      )}
-      {style === "aurora" && (
-        <>
-          <div
-            className="absolute top-0 left-0 w-full h-1/2 opacity-[0.03]"
-            style={{
-              background: `linear-gradient(180deg, ${colors.primary} 0%, ${colors.accent} 50%, transparent 100%)`,
-              filter: "blur(80px)",
-            }}
-          />
-          <div
-            className="absolute bottom-0 left-0 w-full h-1/3 opacity-[0.02]"
-            style={{
-              background: `linear-gradient(0deg, ${colors.secondary} 0%, transparent 100%)`,
-              filter: "blur(60px)",
-            }}
-          />
-        </>
-      )}
-      {style === "grid" && (
-        <div
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage: `
-              linear-gradient(90deg, ${colors.primary} 1px, transparent 1px),
-              linear-gradient(0deg, ${colors.accent} 1px, transparent 1px)
-            `,
-            backgroundSize: "60px 60px",
-          }}
-        />
-      )}
-      {(style === "floating-blobs" || style === "noise") && (
-        <>
-          <div
-            className="absolute top-1/4 left-1/5 w-72 h-72 rounded-full opacity-10 blur-[100px] animate-[blob_30s_ease-in-out_infinite]"
-            style={{ background: `radial-gradient(circle, ${colors.primary}, transparent)` }}
-          />
-          <div
-            className="absolute bottom-1/3 right-1/5 w-96 h-96 rounded-full opacity-8 blur-[120px] animate-[blob_35s_ease-in-out_infinite_10s]"
-            style={{ background: `radial-gradient(circle, ${colors.accent}, transparent)` }}
-          />
-        </>
-      )}
-      {style === "noise" && (
-        <div
-          className="absolute inset-0 opacity-[0.015]"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-            backgroundSize: "128px 128px",
-            opacity: 0.04,
-          }}
-        />
-      )}
-    </div>
+    <>
+      <AnimeThreeCanvas />
+      <SvgLiquidFilterProvider />
+    </>
   );
 }
 
@@ -108,7 +42,26 @@ function CompositionRenderer({ portfolio, composition, className }: PortfolioRen
   const bgStyles = getBackgroundStyles(composition.theme);
   const containerClass = getLayoutContainerClass(composition.layout);
   const spacing = getSectionSpacing(composition.layout);
-  const sectionOrder = composition.sections.map((s) => s.id);
+
+  const compositionSectionIds = composition.sections.map((s) => s.id);
+  const ALL_KNOWN_KEYS = [
+    "hero", "about", "skills", "projects", "experience", "education",
+    "services", "certifications", "awards", "products", "contact",
+    "languages", "metrics", "faq", "articles", "socialLinks", "gallery",
+    "testimonials", "publications", "clients", "roadmap", "speaking",
+    "organizations", "achievements"
+  ];
+
+  const extraPopulatedKeys = ALL_KNOWN_KEYS.filter((key) => {
+    if (compositionSectionIds.includes(key)) return false;
+    const sec = (portfolio.sections as any)?.[key];
+    if (!sec) return false;
+    if (Array.isArray(sec)) return sec.length > 0;
+    if (typeof sec === "object") return Object.keys(sec).length > 0;
+    return !!sec;
+  });
+
+  const sectionOrder = [...compositionSectionIds, ...extraPopulatedKeys];
   const fontsUrl = getGoogleFontsUrl(composition.theme);
 
   const layoutStyle = composition.layout.style;
@@ -124,7 +77,7 @@ function CompositionRenderer({ portfolio, composition, className }: PortfolioRen
   const combinedStyles = { ...themeStyles, ...bgStyles } as React.CSSProperties;
 
   return (
-    <div className={className} style={combinedStyles}>
+    <div className={`ap-portfolio-root ${className ?? ""}`} style={combinedStyles}>
       {fontsUrl && <link rel="stylesheet" href={fontsUrl} />}
 
       <BackgroundDecorations theme={composition.theme} />
@@ -136,112 +89,18 @@ function CompositionRenderer({ portfolio, composition, className }: PortfolioRen
       />
 
       <main
-        className={containerClass}
+        className={`${containerClass} flex flex-col gap-12 md:gap-16 pb-20`}
         style={{ paddingTop: composition.navigation.style === "sidebar" ? "0" : undefined }}
       >
-        {isSplitLayout ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
-            {sectionOrder.map((key, i) => (
-              <div
-                key={key}
-                id={key}
-                style={{
-                  padding: spacing,
-                  gridColumn: i % 3 === 0 ? "1 / -1" : undefined,
-                }}
-                className={i % 3 === 0 ? "md:col-span-2" : ""}
-              >
-                {renderSectionWithVariant(key, portfolio, sectionVariants.get(key), composition)}
-              </div>
-            ))}
+        {sectionOrder.map((key) => (
+          <div
+            key={key}
+            id={key}
+            className="w-full min-w-0"
+          >
+            {renderSectionWithVariant(key, portfolio, sectionVariants.get(key), composition)}
           </div>
-        ) : isMagazineLayout ? (
-          <div className="grid grid-cols-12 gap-4 md:gap-6">
-            {sectionOrder.map((key, i) => {
-              const spanClass = getMagazineSpan(key, i);
-              return (
-                <div
-                  key={key}
-                  id={key}
-                  className={spanClass}
-                  style={{ padding: spacing }}
-                >
-                  {renderSectionWithVariant(key, portfolio, sectionVariants.get(key), composition)}
-                </div>
-              );
-            })}
-          </div>
-        ) : isGalleryLayout ? (
-          <div className="columns-1 md:columns-2 lg:columns-3 gap-4 px-4">
-            {sectionOrder.map((key) => (
-              <div
-                key={key}
-                id={key}
-                className="break-inside-avoid mb-4"
-                style={{ padding: `0 0 ${spacing} 0` }}
-              >
-                {renderSectionWithVariant(key, portfolio, sectionVariants.get(key), composition)}
-              </div>
-            ))}
-          </div>
-        ) : isBentoLayout ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 px-4">
-            {sectionOrder.map((key, i) => {
-              const span = getBentoSpan(key, i);
-              return (
-                <div
-                  key={key}
-                  id={key}
-                  className={span}
-                  style={{ padding: spacing }}
-                >
-                  {renderSectionWithVariant(key, portfolio, sectionVariants.get(key), composition)}
-                </div>
-              );
-            })}
-          </div>
-        ) : isTimelineLayout ? (
-          <div className="relative">
-            <div className="absolute left-1/2 top-0 bottom-0 w-px hidden md:block" style={{ background: composition.theme.colors.border }} />
-            {sectionOrder.map((key, i) => (
-              <div
-                key={key}
-                id={key}
-                className={`relative ${i % 2 === 0 ? "md:pr-[52%]" : "md:pl-[52%]"} ${i % 2 === 0 ? "md:text-right" : ""}`}
-                style={{ padding: spacing }}
-              >
-                <div className={`${i % 2 === 0 ? "md:ml-auto md:mr-8" : "md:ml-8"} max-w-lg`}>
-                  {renderSectionWithVariant(key, portfolio, sectionVariants.get(key), composition)}
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : isFullBleed ? (
-          <div>
-            {sectionOrder.map((key) => (
-              <div
-                key={key}
-                id={key}
-                className="w-full"
-                style={{ minHeight: key === "hero" ? "100vh" : undefined }}
-              >
-                {renderSectionWithVariant(key, portfolio, sectionVariants.get(key), composition)}
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div>
-            {sectionOrder.map((key) => (
-              <div
-                key={key}
-                id={key}
-                style={{ padding: spacing }}
-              >
-                {renderSectionWithVariant(key, portfolio, sectionVariants.get(key), composition)}
-              </div>
-            ))}
-          </div>
-        )}
+        ))}
       </main>
 
       <footer
@@ -281,13 +140,13 @@ function renderSectionWithVariant(
   variant: string | undefined,
   composition: CompositionGraph
 ): React.ReactNode {
-  const sectionData = composition.sections.find((s) => s.id === key);
-  if (!sectionData) return null;
+  const node = renderSection(key as Parameters<typeof renderSection>[0], portfolio);
+  if (!node) return null;
 
   return (
     <CompositionAnimator motion={composition.motion}>
-      <div data-section={key} data-variant={variant} className="portfolio-section">
-        {renderSection(key as Parameters<typeof renderSection>[0], portfolio)}
+      <div data-section={key} data-variant={variant ?? "default"} className="portfolio-section">
+        {node}
       </div>
     </CompositionAnimator>
   );
@@ -326,7 +185,9 @@ function LegacyRenderer({ portfolio, className }: { portfolio: PortfolioObject; 
   const visibleSections = getVisibleSections(portfolio.sections ?? {}, layoutStyle, sectionOrder);
 
   return (
-    <div className={className} style={themeStyles}>
+    <div className={`ap-portfolio-root ${className ?? ""}`} style={themeStyles}>
+      <GBAfterlifeBackground />
+      <SvgLiquidFilterProvider />
       <nav className="sticky top-0 z-50 backdrop-blur-md border-b border-[var(--p-border)] bg-[var(--p-bg)]/80">
         <div className="w-full px-6 h-12 flex items-center justify-between">
           <span className="text-sm font-semibold text-[var(--p-text)]">
