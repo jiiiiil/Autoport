@@ -18,7 +18,7 @@ export function WorkspaceCanvas({ className }: WorkspaceCanvasProps) {
     <FadeIn delay={0.2} y={20} className={className}>
       <div
         className={cn(
-          "relative w-full h-full min-h-[500px] rounded-2xl",
+          "relative w-full h-full min-h-[300px] md:min-h-[500px] rounded-2xl",
           "bg-bg-card border border-white/[0.06] overflow-hidden",
           "shadow-2xl"
         )}
@@ -30,7 +30,7 @@ export function WorkspaceCanvas({ className }: WorkspaceCanvasProps) {
             <div className="w-20 h-3 rounded bg-white/5" />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <PreviewSkeleton />
             <FileTree />
           </div>

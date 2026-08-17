@@ -26,10 +26,34 @@ export const DESIGN_THEME_KEYS: DesignThemeKey[] = [
   "black",
   "white",
   "dark-blue",
+  "spatial-3d",
   "minimal-light",
 ];
 
 export const THEME_DEFINITIONS: ThemeDefinition[] = [
+  {
+    key: "spatial-3d",
+    label: "AiPort Spatial 3D Engine",
+    description: "Apple editorial typography + Awwwards 3D character storytelling + continuous scroll spatial motion.",
+    swatch: ["#050508", "#12131c", "#38bdf8", "#a855f7", "#ffffff"],
+    mode: "dark",
+    backgroundStyle: "mesh-gradient",
+    radiusStyle: "rounded",
+    glassIntensity: "subtle",
+    colors: {
+      primary: "#38bdf8",
+      secondary: "#a855f7",
+      accent: "#38bdf8",
+      background: "#050508",
+      surface: "#12131c",
+      surfaceElevated: "#1a1c2b",
+      text: "#ffffff",
+      textSecondary: "#cbd5e1",
+      textMuted: "#94a3b8",
+      border: "#1e293b",
+      borderSubtle: "#0f172a",
+    },
+  },
   {
     key: "black",
     label: "Black (Pure Dark Neumorphic)",

@@ -1,6 +1,6 @@
 "use client";
 
-import { FeatureCard } from "./feature-card";
+import { FeatureCard } from "@/components/common/feature-card";
 import { FadeIn } from "@/components/common/fade-in";
 import { Layers, Brain, Gem } from "lucide-react";
 

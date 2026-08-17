@@ -17,13 +17,13 @@ export interface GenerateResult {
 }
 
 export const generationService = {
-  async generate(prompt: string, template?: string): Promise<GenerateResult> {
+  async generate(prompt: string, template?: string, userId?: string): Promise<GenerateResult> {
     const startTime = Date.now();
 
     try {
       const result = await runPromptPipeline({ prompt, template });
 
-      const portfolio = await portfolioRepository.create({});
+      const portfolio = await portfolioRepository.create({ userId });
       await portfolioRepository.createVersion(
         portfolio.id,
         1,
@@ -33,7 +33,7 @@ export const generationService = {
         (result.portfolioData.layout as Record<string, unknown>)?.style as string ?? "minimal"
       );
 
-      const generation = await generationRepository.create({ prompt, portfolioId: portfolio.id });
+      const generation = await generationRepository.create({ prompt, portfolioId: portfolio.id, userId });
       const duration = Date.now() - startTime;
       await generationRepository.complete(generation.id, result.portfolioData, duration);
 
@@ -55,11 +55,12 @@ export const generationService = {
     }
   },
 
-  async improve(portfolioId: string, instruction: string): Promise<GenerateResult> {
+  async improve(portfolioId: string, instruction: string, userId?: string): Promise<GenerateResult> {
     const startTime = Date.now();
     const generation = await generationRepository.create({
       prompt: instruction,
       portfolioId,
+      userId,
     });
 
     try {
@@ -100,11 +101,12 @@ export const generationService = {
     }
   },
 
-  async regenerate(portfolioId: string, section: string, instruction?: string): Promise<GenerateResult> {
+  async regenerate(portfolioId: string, section: string, instruction?: string, userId?: string): Promise<GenerateResult> {
     const startTime = Date.now();
     const generation = await generationRepository.create({
       prompt: `Regenerate ${section}`,
       portfolioId,
+      userId,
     });
 
     try {

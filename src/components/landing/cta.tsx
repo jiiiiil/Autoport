@@ -7,8 +7,8 @@ import { ArrowRight } from "lucide-react";
 
 export function CTA() {
   return (
-    <section className="w-full bg-bg py-24 md:py-32">
-      <div className="mx-auto max-w-7xl px-6">
+    <section className="w-full bg-bg py-16 sm:py-24 md:py-32">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <FadeIn className="text-center">
           <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-text-primary mb-4">
             Ready to build your portfolio?

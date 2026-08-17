@@ -45,10 +45,10 @@ export function HeroSection({ portfolio }: { portfolio: PortfolioObject; section
 
           <GBKineticTitle
             text={hero?.headline ?? `Hi, I'm ${name}`}
-            className="text-4xl sm:text-6xl md:text-7xl font-black tracking-tight leading-[1.08] text-white"
+            className="text-4xl sm:text-6xl md:text-7xl font-black tracking-tight leading-[1.08] text-[var(--p-text,#0f172a)]"
           />
 
-          <p className="text-base sm:text-lg md:text-xl text-slate-300 max-w-2xl leading-relaxed font-medium">
+          <p className="text-base sm:text-lg md:text-xl text-[var(--p-text-secondary,#334155)] max-w-2xl leading-relaxed font-semibold">
             {hero?.subheadline ?? portfolio.personalInfo?.tagline ?? "Crafting high-performance digital experiences with futuristic Neumorphic UI and dynamic motion design."}
           </p>
 

@@ -55,7 +55,7 @@ export const useResumeStore = create<ResumeState>((set) => ({
   detectedAsLinkedIn: false,
   detectedPages: null,
 
-  theme: "black",
+  theme: "spatial-3d",
   animationLevel: "medium",
   customColors: {},
   presets: {

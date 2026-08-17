@@ -4,6 +4,9 @@ const envSchema = z.object({
   DATABASE_URL: z.string().url(),
   GROQ_API_KEY: z.string().optional(),
   APP_URL: z.string().url().default("http://localhost:3000"),
+  JWT_SECRET: z.string().min(16, "JWT_SECRET must be at least 16 characters"),
+  JWT_EXPIRES_IN: z.string().default("7d"),
+  PASSWORD_RESET_TOKEN_TTL_MS: z.coerce.number().default(60 * 60 * 1000),
   NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
 });
 

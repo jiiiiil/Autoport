@@ -232,7 +232,11 @@ export function composedThemeToCssString(theme: ComposedTheme): string {
 import { designTokensToCssVars as designTokensToVars } from "./css";
 
 export function getComposedThemeForKey(key: DesignThemeKey): ComposedTheme {
-  return tokensToComposedTheme(getDesignTokens(key));
+  const theme = tokensToComposedTheme(getDesignTokens(key));
+  if (key === "spatial-3d") {
+    theme.mode = "spatial-3d" as any;
+  }
+  return theme;
 }
 
 export function getComposedThemeForCustom(overrides?: Partial<ThemeColors>): ComposedTheme {

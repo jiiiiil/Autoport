@@ -64,7 +64,7 @@ export function PreviewWorkspace() {
       </div>
 
       {/* Minimal floating app controls — no browser frame, no title bar, no fake OS UI. */}
-      <div className="fixed top-3 right-3 z-50 flex items-center gap-1.5 p-1.5 bg-zinc-950/80 backdrop-blur border border-zinc-800/60 rounded-full shadow-lg">
+      <div className="fixed top-3 right-3 z-50 flex items-center gap-1 sm:gap-1.5 p-1 sm:p-1.5 bg-zinc-950/80 backdrop-blur border border-zinc-800/60 rounded-full shadow-lg max-w-[calc(100vw-1.5rem)]">
         <button
           type="button"
           onClick={handleBack}

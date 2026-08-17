@@ -3,6 +3,8 @@ import { parseResumePdf } from "@/server/resume";
 import { successResponse, errorResponse, logger } from "@/server/utils";
 import { handleError } from "@/server/middleware";
 
+export const dynamic = "force-dynamic";
+
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
 export async function POST(req: NextRequest) {

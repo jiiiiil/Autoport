@@ -492,6 +492,14 @@ body {
   background: rgba(255, 255, 255, 0.2);
 }
 
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
 /* Focus Ring */
 *:focus-visible {
   outline: 2px solid var(--color-primary, var(--p-primary, #7c3aed));

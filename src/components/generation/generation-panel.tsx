@@ -31,7 +31,7 @@ export function GenerationPanel({
           <button
             type="button"
             onClick={onBack}
-            aria-label="Back to Prompt Studio"
+            aria-label="Back to Upload Resume"
             className="inline-flex items-center justify-center w-7 h-7 rounded-lg border border-white/10 bg-white/5 text-text-muted hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
           >
             <ArrowLeft className="w-3.5 h-3.5" />

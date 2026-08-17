@@ -29,26 +29,26 @@ type ThemeVars = Record<string, string>;
 };
 
 const WHITE_THEME_VARS: ThemeVars = {
-  "--p-bg": "#ffffff",
+  "--p-bg": "#f8fafc",
   "--p-bg-card": "#ffffff",
-  "--p-bg-card-hover": "#f4f6f9",
-  "--p-border": "#e2e8f0",
-  "--p-border-subtle": "#f1f5f9",
-  "--p-text": "#000000",
-  "--p-text-muted": "#475569",
-  "--p-text-secondary": "#1e293b",
-  "--p-primary": "#000000",
-  "--p-primary-soft": "rgba(0, 0, 0, 0.08)",
-  "--p-primary-softer": "rgba(0, 0, 0, 0.04)",
-  "--p-secondary": "#334155",
-  "--p-accent": "#2563eb",
-  "--p-gradient-from": "#000000",
-  "--p-gradient-via": "#1e293b",
-  "--p-gradient-to": "#000000",
-  "--p-code-bg": "#f1f5f9",
-  "--p-code-border": "#e2e8f0",
-  "--neu-outset": "8px 8px 18px #d1d5db, -8px -8px 18px #ffffff",
-  "--neu-inset": "inset 4px 4px 10px #d1d5db, inset -4px -4px 10px #ffffff",
+  "--p-bg-card-hover": "#f1f5f9",
+  "--p-border": "#cbd5e1",
+  "--p-border-subtle": "#e2e8f0",
+  "--p-text": "#020617",
+  "--p-text-muted": "#334155",
+  "--p-text-secondary": "#0f172a",
+  "--p-primary": "#0284c7",
+  "--p-primary-soft": "rgba(2, 132, 199, 0.12)",
+  "--p-primary-softer": "rgba(2, 132, 199, 0.06)",
+  "--p-secondary": "#0f172a",
+  "--p-accent": "#0284c7",
+  "--p-gradient-from": "#020617",
+  "--p-gradient-via": "#0f172a",
+  "--p-gradient-to": "#020617",
+  "--p-code-bg": "#e2e8f0",
+  "--p-code-border": "#cbd5e1",
+  "--neu-outset": "8px 8px 18px #cbd5e1, -8px -8px 18px #ffffff",
+  "--neu-inset": "inset 4px 4px 10px #cbd5e1, inset -4px -4px 10px #ffffff",
 };
 
 const FALLBACK_THEMES: Record<ThemeMode, ThemeVars> = {
@@ -56,6 +56,8 @@ const FALLBACK_THEMES: Record<ThemeMode, ThemeVars> = {
   black: BLACK_THEME_VARS,
   light: WHITE_THEME_VARS,
   white: WHITE_THEME_VARS,
+  "spatial-3d": BLACK_THEME_VARS,
+  spatial: BLACK_THEME_VARS,
 };
 
 export function getThemeStylesFromComposition(theme: ComposedTheme): React.CSSProperties {

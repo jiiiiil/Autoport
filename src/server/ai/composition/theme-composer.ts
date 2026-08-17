@@ -543,7 +543,7 @@ function getBackgroundStyle(prompt: string): string {
 
 function fallbackTheme(): ComposedTheme {
   return {
-    mode: "dark",
+    mode: "spatial-3d" as any,
     colors: {
       primary: "#7c3aed",
       secondary: "#1e1b4b",
@@ -655,13 +655,15 @@ export function composeTheme(
   const rawPrompt = context.rawPrompt;
   const lower = rawPrompt.toLowerCase();
 
-  const isDarkRequest = lower.includes("dark") || lower.includes("night") || lower.includes("black") || lower.includes("midnight") || lower.includes("deep");
-  const isLightRequest = lower.includes("light") || lower.includes("white") || lower.includes("bright") || lower.includes("day") || lower.includes("cream") || lower.includes("ivory");
-
-  let mode: ThemeMode = "dark";
-  if (isLightRequest && !isDarkRequest) mode = "light";
-  else if (isDarkRequest) mode = "dark";
-  else if (context.theme === "light") mode = "light";
+  const isSpatial3D =
+    lower.includes("spatial") ||
+    lower.includes("3d") ||
+    lower.includes("aiport") ||
+    lower.includes("apple") ||
+    lower.includes("awwwards") ||
+    lower.includes("redoyanul");
+  const isExplicitLight = lower.includes("light") || lower.includes("white");
+  const mode: ThemeMode = isSpatial3D ? ("spatial-3d" as any) : isExplicitLight ? "light" : "dark";
 
   const explicitOverrides = extractExplicitColorOverrides(rawPrompt);
   const colors = generateThemeFromPrompt(rawPrompt, mode === "dark", explicitOverrides);

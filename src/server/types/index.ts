@@ -41,3 +41,20 @@ export interface PortfolioData {
   navigation?: Record<string, unknown>;
   seo?: Record<string, unknown>;
 }
+
+export interface SafeUser {
+  id: string;
+  name: string;
+  email: string;
+  createdAt: string | Date;
+  updatedAt: string | Date;
+}
+
+/** Full user record available only server-side. */
+export interface ServerUser extends SafeUser {
+  passwordHash: string;
+}
+
+export interface AuthContext {
+  user: ServerUser;
+}

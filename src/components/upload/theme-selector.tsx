@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Palette, Moon, Sun } from "lucide-react";
+import { Check, Palette, Moon, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useResumeStore } from "@/lib/resume-store";
 import type { ThemeName } from "@/server/resume/types";
@@ -23,11 +23,11 @@ const PRIMARY_THEMES: PrimaryThemeOption[] = [
     swatch: ["#050508", "#0e0e14", "#ffffff", "#00f0ff"],
   },
   {
-    id: "white",
-    label: "White (Pure Light Neumorphic)",
-    description: "Crisp white background with bold black h1 headings & pure black text.",
-    icon: Sun,
-    swatch: ["#ffffff", "#f4f6f9", "#000000", "#18181b"],
+    id: "spatial-3d",
+    label: "AiPort Spatial 3D Engine",
+    description: "Apple editorial typography + Awwwards 3D character storytelling + scroll-driven spatial motion.",
+    icon: Sparkles,
+    swatch: ["#090a0f", "#141722", "#38bdf8", "#a855f7"],
   },
 ];
 
@@ -51,7 +51,7 @@ export function ThemeSelector() {
           <Palette className="w-4 h-4 text-purple-400" />
           <h3 className="text-sm font-semibold text-white">Theme Palette</h3>
         </div>
-        <span className="text-[11px] font-mono text-purple-300/70">Dark & Light options</span>
+        <span className="text-[11px] font-mono text-purple-300/70">Theme Options</span>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

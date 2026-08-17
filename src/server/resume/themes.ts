@@ -35,14 +35,16 @@ export const CUSTOM_THEME_PRESET: ThemePreset = {
 
 export function getThemePreset(name: ThemeName): ComposedTheme {
   if (name === "custom") return getComposedThemeForCustom();
-  if (name === "white" || name === "minimal-light") {
-    return getComposedThemeForKey("white");
-  }
+  if (name === "spatial-3d") return getComposedThemeForKey("spatial-3d");
+  if (name === "white") return getComposedThemeForKey("white");
+  if (name === "dark-blue") return getComposedThemeForKey("dark-blue");
   return getComposedThemeForKey("black");
 }
 
 export function getThemeNameFromPreset(theme: ComposedTheme): ThemeName {
+  if ((theme.mode as string) === "spatial-3d" || (theme.mode as string) === "spatial") return "spatial-3d";
   if (theme.mode === "light") return "white";
+  if (theme.colors.background.includes("0a0a10")) return "dark-blue";
   return "black";
 }
 

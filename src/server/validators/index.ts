@@ -27,6 +27,10 @@ export const ExportSchema = z.object({
   format: z.enum(["html", "json", "zip"]).default("html"),
 });
 
+export * from "./auth";
+export * from "./portfolio";
+export * from "./project";
+
 export type GenerateInput = z.infer<typeof GenerateSchema>;
 export type ImproveInput = z.infer<typeof ImproveSchema>;
 export type RegenerateInput = z.infer<typeof RegenerateSchema>;

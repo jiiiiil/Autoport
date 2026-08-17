@@ -533,7 +533,7 @@ function computeYears(experience: ResumeExperience[]): number {
   return years;
 }
 
-function buildPortfolioData(resume: ResumeJSON): PortfolioObject {
+function buildPortfolioData(resume: ResumeJSON, themeName?: ThemeName): PortfolioObject {
   const name = resume.personal.name ?? "Your Name";
   const role = resume.personal.role ?? resume.personal.headline ?? "Professional";
   const summary = resume.personal.summary ?? "";
@@ -703,7 +703,7 @@ function buildPortfolioData(resume: ResumeJSON): PortfolioObject {
       tech: [...new Set(resume.technologies.concat(resume.skills.flatMap((g) => g.skills)))].slice(0, 8),
     },
     sections,
-    theme: { mode: "dark" },
+    theme: { mode: (themeName as any) ?? "spatial-3d" },
     layout: { style: "minimal" },
     navigation: {
       links: [],
@@ -812,7 +812,7 @@ export function buildResumeBlueprint(
     metadata,
   };
 
-  const portfolioData = buildPortfolioData(resume);
+  const portfolioData = buildPortfolioData(resume, themeName);
 
   return { composition, portfolioData, strategy, sectionOrder };
 }

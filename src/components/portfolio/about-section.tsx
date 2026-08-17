@@ -29,7 +29,7 @@ export function AboutSection({ portfolio }: { portfolio: PortfolioObject; sectio
               {paragraphs.map((para, i) => (
                 <p
                   key={i}
-                  className="text-base md:text-lg leading-relaxed text-[var(--p-text-secondary)] font-normal"
+                  className="text-base md:text-lg leading-relaxed text-[var(--p-text,#0f172a)] font-semibold"
                 >
                   {para}
                 </p>

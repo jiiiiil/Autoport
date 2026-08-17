@@ -9,11 +9,24 @@ import { TiltCard } from "./interactive/tilt-card";
 import { Emoji3D } from "./interactive/ui8-3d-illustrations";
 import { DepthCarousel } from "./interactive/depth-carousel";
 
+import { BounceCards } from "./interactive/bounce-cards";
+
 export function ProjectsSection({ portfolio }: { portfolio: PortfolioObject; sectionKey: string }) {
   const projects = portfolio.sections?.projects;
-  const [viewMode, setViewMode] = useState<"depth" | "grid">("depth");
+  const isLight = false;
+  const [viewMode, setViewMode] = useState<"bounce" | "depth" | "grid">("bounce");
 
   if (!projects || projects.length === 0) return null;
+
+  const bounceCardItems = projects.map((p, i) => ({
+    id: `proj-${i}`,
+    title: p.title,
+    subtitle: p.tags?.slice(0, 2).join(" • ") || "Featured Project",
+    description: p.description,
+    badge: "Project",
+    tags: p.tags,
+    image: p.image || `https://picsum.photos/seed/${encodeURIComponent(p.title || "proj")}/400/400`,
+  }));
 
   const carouselItems = projects.map((p) => ({
     image: p.image || `https://picsum.photos/seed/${encodeURIComponent(p.title || "proj")}/800/1000`,
@@ -25,35 +38,44 @@ export function ProjectsSection({ portfolio }: { portfolio: PortfolioObject; sec
   }));
 
   return (
-    <section id="projects" className="py-12 md:py-20 relative z-10">
+    <section id="projects" className="py-12 md:py-20 relative z-10" data-bird-target="true">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <Emoji3D type="diamond" size="sm" animate={false} />
-            <span className="text-xs font-black uppercase tracking-widest text-slate-300 font-mono">
-              React Bits 3D Depth Engine
+            <span className="text-xs font-black uppercase tracking-widest text-sky-600 font-mono">
+              React Bits Bounce Showcase
             </span>
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight leading-[1.08]">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[var(--p-text,#1e293b)] tracking-tight leading-[1.08]">
             Featured Projects Showcase
           </h2>
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="flex items-center p-1 rounded-2xl bg-white/05 border border-white/10">
+          <div className="flex items-center p-1 rounded-2xl bg-white/40 border border-slate-200 backdrop-blur-md shadow-sm">
             <button
-              onClick={() => setViewMode("depth")}
+              onClick={() => setViewMode("bounce")}
               className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
-                viewMode === "depth" ? "bg-white text-black font-black shadow-md" : "text-slate-400 hover:text-white"
+                viewMode === "bounce" ? "bg-sky-500 text-white font-black shadow-md" : "text-slate-600 hover:text-slate-900"
               }`}
             >
               <Layers className="w-3.5 h-3.5" />
-              <span>3D Depth Stack</span>
+              <span>Bounce Cards</span>
+            </button>
+            <button
+              onClick={() => setViewMode("depth")}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                viewMode === "depth" ? "bg-sky-500 text-white font-black shadow-md" : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              <Layers className="w-3.5 h-3.5" />
+              <span>3D Stack</span>
             </button>
             <button
               onClick={() => setViewMode("grid")}
               className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
-                viewMode === "grid" ? "bg-white text-black font-black shadow-md" : "text-slate-400 hover:text-white"
+                viewMode === "grid" ? "bg-sky-500 text-white font-black shadow-md" : "text-slate-600 hover:text-slate-900"
               }`}
             >
               <Grid className="w-3.5 h-3.5" />
@@ -67,7 +89,19 @@ export function ProjectsSection({ portfolio }: { portfolio: PortfolioObject; sec
         </div>
       </div>
 
-      {viewMode === "depth" ? (
+      {viewMode === "bounce" ? (
+        <div className="w-full relative rounded-3xl bg-white/40 border border-white/60 p-6 overflow-visible backdrop-blur-md shadow-[0_20px_60px_rgba(0,0,0,0.05)]">
+          <BounceCards
+            cards={bounceCardItems}
+            containerWidth="100%"
+            containerHeight={340}
+            animationDelay={0.1}
+            animationStagger={0.15}
+            easeType="elastic.out(1, 0.5)"
+            enableHover
+          />
+        </div>
+      ) : viewMode === "depth" ? (
         <div className="w-full h-[480px] sm:h-[540px] relative rounded-3xl bg-white/[0.02] border border-white/10 p-4 overflow-hidden">
           <DepthCarousel
             items={carouselItems}

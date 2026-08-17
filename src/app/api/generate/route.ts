@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+import { requireAuth } from "@/server/middleware";
 import { getAIProvider } from "@/server/ai";
 import { analyzePrompt } from "@/server/ai/intelligence/prompt-analyzer";
 import { successResponse, errorResponse, logger } from "@/server/utils";
@@ -43,8 +44,11 @@ function isResumeRequest(body: Record<string, unknown>): body is { resume: Resum
   return !!body.resume && typeof body.resume === "object";
 }
 
-async function runResumeGeneration(body: { resume: ResumeJSON; theme?: ThemeName; animationLevel?: AnimationLevel; customColors?: Record<string, string> }) {
-  const theme: ThemeName = body.theme ?? "dark-blue";
+async function runResumeGeneration(
+  body: { resume: ResumeJSON; theme?: ThemeName; animationLevel?: AnimationLevel; customColors?: Record<string, string> },
+  userId: string,
+) {
+  const theme: ThemeName = body.theme ?? "spatial-3d";
   const animationLevel: AnimationLevel = body.animationLevel ?? "medium";
 
   const result = generatePortfolioFromResume({
@@ -59,7 +63,7 @@ async function runResumeGeneration(body: { resume: ResumeJSON; theme?: ThemeName
 
   const sandpack = buildSandpackResponse(result.portfolioData as unknown as import("@/server/types").PortfolioData, result.composition);
 
-  const portfolio = await portfolioRepository.create({});
+  const portfolio = await portfolioRepository.create({ userId });
   await portfolioRepository.createVersion(
     portfolio.id,
     1,
@@ -69,7 +73,7 @@ async function runResumeGeneration(body: { resume: ResumeJSON; theme?: ThemeName
     result.composition.layout.style,
   );
 
-  const generation = await generationRepository.create({ prompt: sourcePrompt, portfolioId: portfolio.id });
+  const generation = await generationRepository.create({ prompt: sourcePrompt, portfolioId: portfolio.id, userId });
 
   return {
     portfolioId: portfolio.id,
@@ -97,10 +101,11 @@ interface GenerationCustomColors {
 export async function POST(req: NextRequest) {
   const start = Date.now();
   try {
+    const user = await requireAuth();
     const body = await req.json() as Record<string, unknown>;
 
     if (isResumeRequest(body)) {
-      const { resume, theme = "dark-blue", animationLevel = "medium", stream, customColors } = body;
+      const { resume, theme = "spatial-3d", animationLevel = "medium", stream, customColors } = body;
 
       logger.info(`Resume generation: "${(resume.personal?.name ?? "user").slice(0, 40)}" theme=${theme} animation=${animationLevel}`, "API");
 
@@ -120,7 +125,7 @@ export async function POST(req: NextRequest) {
           await delay(150);
           sendEvent(controller, encoder.statusEvent("Design tokens applied. Building live preview..."));
 
-          const payload = await runResumeGeneration({ resume, theme, animationLevel, customColors: customColors as Record<string, string> | undefined });
+          const payload = await runResumeGeneration({ resume, theme, animationLevel, customColors: customColors as Record<string, string> | undefined }, user.id);
 
           await delay(150);
           sendEvent(controller, encoder.statusEvent("Portfolio generated successfully!"));
@@ -134,7 +139,7 @@ export async function POST(req: NextRequest) {
         });
       }
 
-      const payload = await runResumeGeneration({ resume, theme, animationLevel, customColors: customColors as Record<string, string> | undefined });
+      const payload = await runResumeGeneration({ resume, theme, animationLevel, customColors: customColors as Record<string, string> | undefined }, user.id);
       const duration = Date.now() - start;
       await generationRepository.complete(payload.generationId, payload.portfolioData, duration);
 
@@ -252,7 +257,7 @@ export async function POST(req: NextRequest) {
 
         sendEvent(controller, encoder.statusEvent("Saving to database..."));
 
-        const portfolio = await portfolioRepository.create({});
+        const portfolio = await portfolioRepository.create({ userId: user.id });
         await portfolioRepository.createVersion(
           portfolio.id,
           1,
@@ -262,7 +267,7 @@ export async function POST(req: NextRequest) {
           reviewedComposition.layout.style,
         );
 
-        const generation = await generationRepository.create({ prompt, portfolioId: portfolio.id });
+        const generation = await generationRepository.create({ prompt, portfolioId: portfolio.id, userId: user.id });
 
         const duration = Date.now() - start;
         await generationRepository.complete(generation.id, reviewedData, duration);
@@ -331,7 +336,7 @@ export async function POST(req: NextRequest) {
 
     const sandpack = buildSandpackResponse(reviewedData, reviewedComposition);
 
-    const portfolio = await portfolioRepository.create({});
+    const portfolio = await portfolioRepository.create({ userId: user.id });
     await portfolioRepository.createVersion(
       portfolio.id,
       1,
@@ -341,7 +346,7 @@ export async function POST(req: NextRequest) {
       reviewedComposition.layout.style,
     );
 
-    const generation = await generationRepository.create({ prompt, portfolioId: portfolio.id });
+    const generation = await generationRepository.create({ prompt, portfolioId: portfolio.id, userId: user.id });
     const duration = Date.now() - start;
     await generationRepository.complete(generation.id, reviewedData, duration);
 

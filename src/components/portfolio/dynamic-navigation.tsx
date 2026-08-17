@@ -3,6 +3,8 @@
 import React from "react";
 import type { ComposedNavigation, ComposedTheme } from "@/server/ai/composition/types";
 
+import { CapsuleNavbar } from "./capsule-navbar";
+
 interface DynamicNavigationProps {
   navigation: ComposedNavigation;
   theme: ComposedTheme;
@@ -16,6 +18,9 @@ export function DynamicNavigation({ navigation, theme, portfolioName, className 
     href: `#${s}`,
   }));
 
+  const modeStr = (theme?.mode as string) || "";
+  const isLight = modeStr === "light" || modeStr === "white";
+
   const baseStyle: React.CSSProperties = {
     fontFamily: theme.typography.bodyFont,
     color: theme.colors.text,
@@ -24,6 +29,18 @@ export function DynamicNavigation({ navigation, theme, portfolioName, className 
   const navStyle = navigation.style;
 
   if (navStyle === "none") return null;
+
+  // Use CapsuleNavbar matching Screenshot 1 for all top header navigation
+  if (navStyle !== "sidebar") {
+    return (
+      <CapsuleNavbar
+        portfolioName={portfolioName}
+        links={links}
+        isLight={isLight}
+        className={className}
+      />
+    );
+  }
 
   if (navStyle === "sidebar") {
     return (

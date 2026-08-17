@@ -20,7 +20,7 @@ export function GenerationWorkspace() {
             <GenerationPanel
               className="flex-1"
               onPreview={() => router.push("/preview")}
-              onBack={() => router.push("/prompt")}
+              onBack={() => router.push("/upload")}
             />
           </FadeIn>
 

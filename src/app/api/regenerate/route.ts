@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+import { requireAuth, requirePortfolioOwnership } from "@/server/middleware";
 import { generationService } from "@/server/services";
 import { successResponse, errorResponse, logger } from "@/server/utils";
 import { handleError } from "@/server/middleware";
@@ -6,6 +7,7 @@ import { handleError } from "@/server/middleware";
 export async function POST(req: NextRequest) {
   const start = Date.now();
   try {
+    const user = await requireAuth();
     const body = await req.json();
     const { portfolioId, section, instruction } = body as {
       portfolioId?: string;
@@ -21,9 +23,11 @@ export async function POST(req: NextRequest) {
       return Response.json(errorResponse("Section is required"), { status: 400 });
     }
 
+    await requirePortfolioOwnership(user.id, portfolioId);
+
     logger.info(`Regenerate request for portfolio ${portfolioId}, section: ${section}`, "API");
 
-    const result = await generationService.regenerate(portfolioId, section, instruction);
+    const result = await generationService.regenerate(portfolioId, section, instruction, user.id);
 
     const duration = Date.now() - start;
     logger.info(`Regenerate completed in ${duration}ms`, "API");

@@ -10,7 +10,7 @@ export function Hero() {
   return (
     <section className="relative w-full overflow-hidden bg-bg">
       <div className="dot-pattern absolute inset-0 opacity-30" />
-      <div className="relative mx-auto max-w-7xl px-6 pt-20 pb-24 md:pt-28 md:pb-32">
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 pt-16 sm:pt-20 pb-16 sm:pb-24 md:pt-28 md:pb-32">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="flex flex-col gap-6 max-w-xl">
             <FadeIn delay={0.1} y={15}>
@@ -35,7 +35,7 @@ export function Hero() {
             </FadeIn>
 
             <FadeIn delay={0.4} y={15}>
-              <div className="flex items-center gap-4 pt-2">
+              <div className="flex flex-wrap items-center gap-4 pt-2">
                 <Link href="/upload">
                   <Button size="lg">
                     Upload Resume

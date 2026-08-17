@@ -40,7 +40,7 @@ export function LovableCodeViewer({ onClose }: { onClose?: () => void }) {
     <div
       className={cn(
         "bg-zinc-950 text-zinc-100 border border-zinc-800 rounded-2xl overflow-hidden shadow-2xl flex flex-col transition-all duration-300 select-none",
-        isFullscreen ? "fixed inset-4 z-50 rounded-3xl" : "w-full h-[620px]"
+        isFullscreen ? "fixed inset-2 sm:inset-4 z-50 rounded-3xl" : "w-full h-[50vh] sm:h-[620px]"
       )}
     >
       {/* Lovable Header Bar */}
@@ -60,7 +60,7 @@ export function LovableCodeViewer({ onClose }: { onClose?: () => void }) {
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap justify-end">
           <button
             onClick={() => downloadPortfolioZip(portfolio, composition)}
             className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 text-xs font-bold text-white shadow-lg shadow-indigo-500/20 hover:opacity-95 hover:scale-[1.02] active:scale-95 transition-all cursor-pointer border border-indigo-400/30"
@@ -99,7 +99,7 @@ export function LovableCodeViewer({ onClose }: { onClose?: () => void }) {
       {/* Main Studio Body: File Tree + Code Editor */}
       <div className="flex flex-1 min-h-0 overflow-hidden">
         {/* Left Sidebar: File Tree */}
-        <div className="w-56 shrink-0 border-r border-zinc-800 bg-zinc-950/80 p-3 overflow-y-auto space-y-1">
+        <div className="hidden sm:block w-48 md:w-56 shrink-0 border-r border-zinc-800 bg-zinc-950/80 p-3 overflow-y-auto space-y-1">
           <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-zinc-500 px-2 mb-2 flex items-center gap-1.5">
             <Folder className="w-3.5 h-3.5 text-indigo-400" />
             <span>Project Explorer</span>

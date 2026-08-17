@@ -4,7 +4,7 @@ export function emptyPortfolio(): PortfolioObject {
   return {
     personalInfo: {},
     sections: {},
-    theme: { mode: "dark" },
+    theme: { mode: "spatial-3d" },
     layout: { style: "minimal" },
     navigation: { links: [] },
     seo: {},

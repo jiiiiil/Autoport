@@ -4,6 +4,7 @@ export type DesignThemeKey =
   | "black"
   | "white"
   | "dark-blue"
+  | "spatial-3d"
   | "minimal-light";
 
 export interface ThemeColors {

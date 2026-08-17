@@ -3,12 +3,15 @@
 import React from "react";
 import type { PortfolioObject } from "@/lib/portfolio/types";
 import type { CompositionGraph } from "@/server/ai/composition/types";
-import { getThemeStylesFromComposition, getGoogleFontsUrl, getBackgroundStyles } from "@/lib/portfolio/themes";
-import { getLayoutContainerClass, getSectionSpacing } from "@/lib/portfolio/layouts";
+import { getThemeStylesFromComposition, getGoogleFontsUrl, getBackgroundStyles, getThemeStyles } from "@/lib/portfolio/themes";
+import { getLayoutContainerClass, getSectionSpacing, getVisibleSections } from "@/lib/portfolio/layouts";
 import { DynamicNavigation } from "./dynamic-navigation";
+import { CapsuleNavbar } from "./capsule-navbar";
 import { renderSection } from "@/lib/portfolio/registry";
 import { CompositionAnimator } from "./composition-animator";
 import { ThreeCanvasBackground } from "./interactive/three-canvas-background";
+
+import { SpatialPortfolioRenderer } from "./spatial-portfolio-renderer";
 
 interface PortfolioRendererProps {
   portfolio: PortfolioObject;
@@ -17,6 +20,13 @@ interface PortfolioRendererProps {
 }
 
 export function PortfolioRenderer({ portfolio, composition, className }: PortfolioRendererProps) {
+  const themeMode = (portfolio.theme?.mode as string) || (composition?.theme?.mode as string);
+  const isSpatialTheme = themeMode === "spatial-3d" || themeMode === "spatial" || themeMode === "black" || themeMode === "dark" || !themeMode;
+
+  if (isSpatialTheme) {
+    return <SpatialPortfolioRenderer portfolio={portfolio} className={className} />;
+  }
+
   if (composition) {
     return <CompositionRenderer portfolio={portfolio} composition={composition} className={className} />;
   }
@@ -27,11 +37,15 @@ export function PortfolioRenderer({ portfolio, composition, className }: Portfol
 import { GBAfterlifeBackground } from "./interactive/gb-afterlife-canvas";
 import { AnimeThreeCanvas } from "./interactive/anime-three-canvas";
 import { SvgLiquidFilterProvider } from "./interactive/liquid-image";
+import { SkyBackground } from "./interactive/sky-background";
+import { VolumetricSkyBackground } from "./interactive/volumetric-sky-background";
+import { SkyBirds } from "./interactive/sky-birds";
 
 function BackgroundDecorations({ theme }: { theme: CompositionGraph["theme"] }) {
   return (
     <>
       <AnimeThreeCanvas />
+      <GBAfterlifeBackground />
       <SvgLiquidFilterProvider />
     </>
   );
@@ -140,7 +154,13 @@ function renderSectionWithVariant(
   variant: string | undefined,
   composition: CompositionGraph
 ): React.ReactNode {
-  const node = renderSection(key as Parameters<typeof renderSection>[0], portfolio);
+  const mergedPortfolio: PortfolioObject = {
+    ...portfolio,
+    theme: {
+      mode: "dark",
+    },
+  };
+  const node = renderSection(key as Parameters<typeof renderSection>[0], mergedPortfolio);
   if (!node) return null;
 
   return (
@@ -174,10 +194,8 @@ function getBentoSpan(key: string, index: number): string {
 }
 
 function LegacyRenderer({ portfolio, className }: { portfolio: PortfolioObject; className?: string }) {
-  const themeMode = portfolio.theme?.mode ?? "dark";
-  const { getThemeStyles } = require("@/lib/portfolio/themes");
-  const { getVisibleSections } = require("@/lib/portfolio/layouts");
-  const { renderSection: legacyRenderSection } = require("@/lib/portfolio/registry");
+  const isLight = portfolio.theme?.mode === "light" || portfolio.theme?.mode === "white";
+  const themeMode = isLight ? "white" : "black";
 
   const themeStyles = getThemeStyles(themeMode);
   const layoutStyle = portfolio.layout?.style ?? "minimal";
@@ -185,32 +203,34 @@ function LegacyRenderer({ portfolio, className }: { portfolio: PortfolioObject; 
   const visibleSections = getVisibleSections(portfolio.sections ?? {}, layoutStyle, sectionOrder);
 
   return (
-    <div className={`ap-portfolio-root ${className ?? ""}`} style={themeStyles}>
+    <div className={`ap-portfolio-root ${isLight ? "theme-white bg-white text-slate-900" : "theme-dark bg-[#050508] text-white"} ${className ?? ""}`} style={themeStyles}>
+      <AnimeThreeCanvas />
       <GBAfterlifeBackground />
       <SvgLiquidFilterProvider />
-      <nav className="sticky top-0 z-50 backdrop-blur-md border-b border-[var(--p-border)] bg-[var(--p-bg)]/80">
-        <div className="w-full px-6 h-12 flex items-center justify-between">
-          <span className="text-sm font-semibold text-[var(--p-text)]">
-            {portfolio.personalInfo?.name ?? "Portfolio"}
-          </span>
-          <div className="flex gap-4">
-            {(portfolio.navigation?.links ?? []).map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                className="text-xs text-[var(--p-text-muted)] hover:text-[var(--p-text)] transition-colors"
-              >
-                {link.label}
-              </a>
-            ))}
-          </div>
-        </div>
-      </nav>
+      <CapsuleNavbar
+        portfolioName={portfolio.personalInfo?.name ?? "Portfolio"}
+        links={
+          portfolio.navigation?.links && portfolio.navigation.links.length > 0
+            ? portfolio.navigation.links
+            : [
+                { label: "Home", href: "#hero" },
+                { label: "About", href: "#about" },
+                { label: "Experience", href: "#experience" },
+                { label: "Skills", href: "#skills" },
+                { label: "Projects", href: "#projects" },
+                { label: "Contact", href: "#contact" },
+              ]
+        }
+        isLight={isLight}
+      />
 
       <main className="w-full">
         {visibleSections.map((key: string) => (
           <div key={key}>
-            {legacyRenderSection(key, portfolio)}
+            {renderSection(key, {
+              ...portfolio,
+              theme: { mode: isLight ? "light" : "dark" },
+            })}
           </div>
         ))}
       </main>

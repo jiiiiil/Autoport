@@ -37,7 +37,7 @@ const features = [
 export function Features() {
   return (
     <section id="features" className="w-full bg-bg py-20 md:py-28">
-      <div className="mx-auto max-w-7xl px-6">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <FadeIn className="text-center mb-14">
           <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-text-primary">
             Everything you need
@@ -50,7 +50,7 @@ export function Features() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {features.map((feature, i) => (
             <FadeIn key={feature.title} delay={0.1 * i} y={20}>
-              <div className="group rounded-xl border border-border bg-white p-6 transition-all duration-200 hover:shadow-lg hover:border-border-light">
+              <div className="group rounded-xl border border-border bg-bg-card p-6 transition-all duration-200 hover:shadow-lg hover:border-border-light">
                 <div className="mb-4 flex items-center gap-3">
                   <div
                     className={`w-9 h-9 rounded-lg flex items-center justify-center ${feature.accent}/10`}
@@ -61,10 +61,10 @@ export function Features() {
                   </div>
                   <div className={`w-1.5 h-1.5 rounded-full ${feature.accent}`} />
                 </div>
-                <h3 className="text-sm font-semibold text-text-primary mb-1.5">
+                <h3 className="text-sm md:text-base font-semibold text-text-primary mb-1.5">
                   {feature.title}
                 </h3>
-                <p className="text-text-secondary text-xs leading-relaxed">
+                <p className="text-text-secondary text-xs md:text-sm leading-relaxed">
                   {feature.description}
                 </p>
               </div>

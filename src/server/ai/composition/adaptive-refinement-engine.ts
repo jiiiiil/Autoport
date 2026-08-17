@@ -4,7 +4,7 @@ export function refineComposition(composition: CompositionGraph): RefinementResu
   const changes: RefinementChange[] = [];
   if (!composition.theme) {
     composition.theme = {
-      mode: "dark",
+      mode: "spatial-3d" as any,
       colors: { primary: "#7c3aed", secondary: "#1e1b4b", accent: "#06b6d4", background: "#0a0a0a", surface: "#141414", surfaceElevated: "#1a1a1a", text: "#fafafa", textSecondary: "#a1a1aa", textMuted: "#71717a", border: "#27272a", borderSubtle: "#1f1f23", success: "#22c55e", warning: "#f59e0b", error: "#ef4444", info: "#3b82f6", overlay: "rgba(0,0,0,0.8)" },
       typography: { headingFont: "Inter", bodyFont: "Inter", monoFont: "'JetBrains Mono', 'Fira Code', monospace", scale: { base: "1.25" }, lineHeights: { tight: "1.1", snug: "1.25", normal: "1.5", relaxed: "1.625", loose: "2" }, letterSpacings: { tighter: "-0.05em", tight: "-0.025em", normal: "0", wide: "0.025em", wider: "0.05em", widest: "0.1em" }, fontWeights: { normal: 400, medium: 500, semibold: 600, bold: 700, extrabold: 800 } },
       spacing: { unit: "4px", sectionPadding: "5rem", containerPadding: "1.5rem", elementGap: "1.5rem" },
