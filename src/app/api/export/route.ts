@@ -1,11 +1,13 @@
-import { NextRequest } from "next/server";
-import { requireAuth, requirePortfolioOwnership } from "@/server/middleware";
-import { exportService } from "@/server/services";
-import { successResponse, errorResponse, logger } from "@/server/utils";
-import { handleError } from "@/server/middleware";
+import { NextRequest, NextResponse } from "next/server";
 import JSZip from "jszip";
-import { readFileSync, readdirSync, existsSync, statSync } from "fs";
-import { join } from "path";
+import { existsSync, readFileSync, mkdirSync, readdirSync, statSync } from "node:fs";
+import { join } from "node:path";
+import { successResponse, errorResponse, logger } from "@/server/utils";
+import { handleError, requireAuth, requirePortfolioOwnership } from "@/server/middleware";
+import { exportService } from "@/server/services/export";
+
+export const dynamic = "force-dynamic";
+export const maxDuration = 120; // Increase timeout to 120 seconds for Vercel
 
 export async function POST(req: NextRequest) {
   try {

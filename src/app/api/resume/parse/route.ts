@@ -4,6 +4,7 @@ import { successResponse, errorResponse, logger } from "@/server/utils";
 import { handleError } from "@/server/middleware";
 
 export const dynamic = "force-dynamic";
+export const maxDuration = 120; // Increase timeout to 120 seconds for Vercel
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
@@ -38,7 +39,15 @@ export async function POST(req: NextRequest) {
 
     logger.info(`Parsing resume PDF: "${filename}" (${buffer.byteLength} bytes)`, "API");
 
-    const report = await parseResumePdf(buffer, filename, buffer.byteLength);
+    // Add timeout protection
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error("PDF parsing timeout")), 90000); // 90 seconds
+    });
+
+    const report = await Promise.race([
+      parseResumePdf(buffer, filename, buffer.byteLength),
+      timeoutPromise
+    ]) as Awaited<ReturnType<typeof parseResumePdf>>;
 
     const duration = Date.now() - start;
     logger.info(`Resume parsed in ${duration}ms — ${report.resume.experience.length} experiences, ${report.resume.education.length} educations, ${report.resume.skills.length} skill groups`, "API");
@@ -48,6 +57,7 @@ export async function POST(req: NextRequest) {
       { status: 200 }
     );
   } catch (error) {
+    logger.error(`PDF parse error: ${error instanceof Error ? error.message : String(error)}`, "API", error);
     return handleError(error);
   }
 }

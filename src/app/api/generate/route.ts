@@ -17,6 +17,9 @@ import { reviewAndImprove } from "@/server/ai/pipeline/self-review";
 import { generatePortfolioFromResume } from "@/server/resume";
 import type { ResumeJSON, ThemeName, AnimationLevel } from "@/server/resume/types";
 
+export const dynamic = "force-dynamic";
+export const maxDuration = 120; // Increase timeout to 120 seconds for Vercel
+
 function isRateLimitError(err: unknown): boolean {
   const msg = err instanceof Error ? err.message : String(err);
   return msg.includes("429") || msg.includes("rate_limit") || msg.includes("RESOURCE_EXHAUSTED") || msg.includes("quota");
