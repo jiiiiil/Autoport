@@ -309,50 +309,60 @@ export async function extractResumeFromPdf(
   filename: string,
   size: number
 ): Promise<{ resume: ResumeJSON; detectedAsLinkedIn: boolean; pages: number }> {
-  const { text, pages } = await loadPdfText(buffer);
-  if (!text || text.trim().length < 50) {
-    throw new AIServiceError("Could not extract readable text from this PDF. Make sure the file is a text-based resume (not scanned images).");
+  try {
+    logger.info(`Starting PDF extraction for ${filename} (${size} bytes)`, "ResumeParser");
+    const { text, pages } = await loadPdfText(buffer);
+    logger.info(`PDF text extracted: ${text.length} chars, ${pages} pages`, "ResumeParser");
+    
+    if (!text || text.trim().length < 50) {
+      throw new AIServiceError("Could not extract readable text from this PDF. Make sure the file is a text-based resume (not scanned images).");
+    }
+
+    const heuristic = detectLinkedInHeuristic(filename, text);
+    const detectedAsLinkedIn = heuristic.detectedAsLinkedIn;
+
+    logger.info(`Starting AI extraction with Groq`, "ResumeParser");
+    const extraction = await withRetry(
+      () => chatCompletion(buildResumeExtractionPrompt(text, filename), { temperature: 0.1, maxTokens: 4096 }),
+      "resume extraction"
+    );
+    logger.info(`AI extraction completed`, "ResumeParser");
+
+    const raw = extractJson(extraction);
+    const structured = sanitizeResume(raw);
+
+    const source: ResumeSourceInfo = {
+      filename,
+      format: "application/pdf",
+      size,
+      detectedAsLinkedIn,
+      pages,
+      rawTextLength: text.length,
+    };
+
+    const resume: ResumeJSON = {
+      source,
+      personal: structured.personal ?? {},
+      experience: structured.experience ?? [],
+      education: structured.education ?? [],
+      projects: structured.projects ?? [],
+      skills: structured.skills ?? [],
+      technologies: structured.technologies ?? [],
+      languages: structured.languages ?? [],
+      certifications: structured.certifications ?? [],
+      achievements: structured.achievements ?? [],
+      awards: structured.awards ?? [],
+      organizations: structured.organizations ?? [],
+      volunteerExperience: structured.volunteerExperience ?? [],
+      publications: structured.publications ?? [],
+      courses: structured.courses ?? [],
+      interests: structured.interests ?? [],
+      rawText: text,
+    };
+
+    return { resume, detectedAsLinkedIn, pages };
+  } catch (error) {
+    logger.error(`PDF extraction failed: ${error instanceof Error ? error.message : String(error)}`, "ResumeParser", error);
+    throw error;
   }
-
-  const heuristic = detectLinkedInHeuristic(filename, text);
-  const detectedAsLinkedIn = heuristic.detectedAsLinkedIn;
-
-  const extraction = await withRetry(
-    () => chatCompletion(buildResumeExtractionPrompt(text, filename), { temperature: 0.1, maxTokens: 4096 }),
-    "resume extraction"
-  );
-
-  const raw = extractJson(extraction);
-  const structured = sanitizeResume(raw);
-
-  const source: ResumeSourceInfo = {
-    filename,
-    format: "application/pdf",
-    size,
-    detectedAsLinkedIn,
-    pages,
-    rawTextLength: text.length,
-  };
-
-  const resume: ResumeJSON = {
-    source,
-    personal: structured.personal ?? {},
-    experience: structured.experience ?? [],
-    education: structured.education ?? [],
-    projects: structured.projects ?? [],
-    skills: structured.skills ?? [],
-    technologies: structured.technologies ?? [],
-    languages: structured.languages ?? [],
-    certifications: structured.certifications ?? [],
-    achievements: structured.achievements ?? [],
-    awards: structured.awards ?? [],
-    organizations: structured.organizations ?? [],
-    volunteerExperience: structured.volunteerExperience ?? [],
-    publications: structured.publications ?? [],
-    courses: structured.courses ?? [],
-    interests: structured.interests ?? [],
-    rawText: text,
-  };
-
-  return { resume, detectedAsLinkedIn, pages };
 }
