@@ -2,6 +2,7 @@ import { getEnv } from "@/server/config";
 import { AIServiceError, logger } from "@/server/utils";
 import type { ResumeJSON, ResumeSourceInfo } from "./types";
 import { buildResumeExtractionPrompt } from "./prompts";
+import { mod } from "three/src/nodes/math/OperatorNode.js";
 
 const MAX_RETRIES = 3;
 const BASE_DELAY_MS = 1500;
@@ -260,47 +261,28 @@ function detectLinkedInHeuristic(filename: string, text: string): { detectedAsLi
 
 interface PDFParseClass {
   new (opts: { data: Buffer }): PDFParseInstance;
-  setWorker?(workerSrc: string): void;
 }
 
 interface PDFParseInstance {
-  getText(): Promise<{ text?: string; pages?: Array<unknown> }>;
+  getText(): Promise<{ text: string; pages: Array<{ num: number; text: string }> }>;
   destroy(): Promise<void>;
 }
 
-async function resolvePdfWorkerUrl(): Promise<string | null> {
-  try {
-    const path = await import("node:path");
-    const fs = await import("node:fs");
-    const workerPath = path.join(process.cwd(), "node_modules", "pdf-parse", "dist", "pdf-parse", "web", "pdf.worker.mjs");
-    if (!fs.existsSync(workerPath)) return null;
-    return "file:///" + workerPath.replace(/\\/g, "/");
-  } catch {
-    return null;
-  }
-}
-
 async function loadPdfText(buffer: Buffer): Promise<{ text: string; pages: number }> {
-  let PDFParse: PDFParseClass | undefined;
   try {
     const mod = await import("pdf-parse");
-    PDFParse = (mod as unknown as { PDFParse?: PDFParseClass }).PDFParse;
-  } catch {
-    PDFParse = undefined;
-  }
-  if (!PDFParse) throw new AIServiceError("PDF parsing library unavailable");
-
-  const workerUrl = await resolvePdfWorkerUrl();
-  if (workerUrl && typeof PDFParse.setWorker === "function") {
-    PDFParse.setWorker(workerUrl);
-  }
-
-  const parser = new PDFParse({ data: buffer });
-  try {
-    const result = await parser.getText();
-    return { text: result.text ?? "", pages: result.pages?.length ?? 1 };
-  } finally {
-    await parser.destroy();
+    const { PDFParse } = mod as { PDFParse: PDFParseClass };
+    
+    const parser = new PDFParse({ data: buffer });
+    try {
+      const result = await parser.getText();
+      return { text: result.text ?? "", pages: result.pages?.length ?? 1 };
+    } finally {
+      await parser.destroy();
+    }
+  } catch (error) {
+    logger.error(`PDF parsing failed: ${error instanceof Error ? error.message : String(error)}`, "ResumeParser", error);
+    throw new AIServiceError("PDF parsing library unavailable");
   }
 }
 
