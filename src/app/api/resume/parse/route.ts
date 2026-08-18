@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { parseResumePdf } from "@/server/resume";
 import { successResponse, errorResponse, logger } from "@/server/utils";
 import { handleError } from "@/server/middleware";
+import { getEnv } from "@/server/config/env";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 120; // Increase timeout to 120 seconds for Vercel
@@ -11,6 +12,16 @@ const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 export async function POST(req: NextRequest) {
   const start = Date.now();
   try {
+    // Check environment variables
+    const env = getEnv();
+    if (!env.GROQ_API_KEY) {
+      logger.error("GROQ_API_KEY not configured", "API");
+      return Response.json(
+        errorResponse("Server configuration error: GROQ_API_KEY not set"),
+        { status: 500 }
+      );
+    }
+
     const contentType = req.headers.get("content-type") ?? "";
     if (!contentType.includes("multipart/form-data")) {
       return Response.json(errorResponse("Expected a PDF file upload"), { status: 400 });
