@@ -9,7 +9,9 @@ export type ErrorCode =
   | "VALIDATION_ERROR"
   | "INTERNAL_SERVER_ERROR"
   | "RATE_LIMIT_EXCEEDED"
-  | "WEAK_PASSWORD";
+  | "WEAK_PASSWORD"
+  | "AI_CONFIGURATION_ERROR"
+  | "AI_SERVICE_ERROR";
 
 export class AppError extends Error {
   public readonly statusCode: number;
@@ -83,8 +85,10 @@ export class DatabaseError extends AppError {
 }
 
 export class AIServiceError extends AppError {
-  constructor(message = "AI service unavailable") {
-    super(message, 503);
+  constructor(message = "AI service unavailable", isConfigurationError = false) {
+    const code = isConfigurationError ? "AI_CONFIGURATION_ERROR" : "AI_SERVICE_ERROR";
+    const statusCode = isConfigurationError ? 500 : 503;
+    super(message, statusCode, true, code);
   }
 }
 

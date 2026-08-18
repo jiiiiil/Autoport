@@ -8,18 +8,37 @@ import { AIServiceError, logger } from "@/server/utils";
 const MAX_RETRIES = 5;
 const BASE_DELAY_MS = 2000;
 const TIMEOUT_MS = 60_000;
-const MODEL = "llama-3.3-70b-versatile";
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
 
 function getApiKey(): string {
   const env = getEnv();
   if (!env.GROQ_API_KEY) throw new AIServiceError("GROQ_API_KEY not configured");
+  const keyPrefix = env.GROQ_API_KEY.substring(0, 6);
+  logger.info(`Groq API key configured: true, prefix: ${keyPrefix}...`, "GroqProvider");
   return env.GROQ_API_KEY;
+}
+
+function getModel(): string {
+  const env = getEnv();
+  const model = env.GROQ_MODEL;
+  logger.info(`Runtime Groq model: ${model}`, "GroqProvider");
+  
+  // Fail-fast validation for deprecated models
+  if (model === "llama-3.3-70b-versatile" || model === "llama-3.1-70b-versatile") {
+    throw new AIServiceError(`Deprecated Groq model detected: ${model}. Please update GROQ_MODEL to openai/gpt-oss-120b`, true);
+  }
+  
+  return model;
 }
 
 function isRateLimitError(err: unknown): boolean {
   const msg = err instanceof Error ? err.message : String(err);
   return msg.includes("429") || msg.includes("rate_limit") || msg.includes("RESOURCE_EXHAUSTED") || msg.includes("quota");
+}
+
+function isPermanentError(err: unknown): boolean {
+  const msg = err instanceof Error ? err.message : String(err);
+  return msg.includes("model_decommissioned") || msg.includes("invalid_request_error") || msg.includes("invalid model") || msg.includes("400");
 }
 
 function parseRetryDelay(err: unknown): number | null {
@@ -36,8 +55,10 @@ async function chatCompletion(prompt: string, options: { temperature?: number; m
   const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS);
 
   try {
+    const model = getModel();
+    logger.info(`Final Groq request model: ${model}`, "GroqProvider");
     const payload: Record<string, unknown> = {
-      model: MODEL,
+      model,
       messages: [{ role: "user", content: prompt }],
       temperature,
       max_tokens: maxTokens,
@@ -77,6 +98,16 @@ async function withRetry<T>(fn: () => Promise<T>, label: string): Promise<T> {
       return await fn();
     } catch (err) {
       lastError = err instanceof Error ? err : new Error(String(err));
+      
+      // Fail immediately for permanent configuration errors
+      if (isPermanentError(err)) {
+        logger.error(`${label} permanent error (no retry): ${lastError.message}`, "GroqProvider");
+        if (lastError.message.includes("model_not_found") || lastError.message.includes("does not exist")) {
+          throw new AIServiceError("Groq model is unavailable for the configured API key/project. Please verify GROQ_MODEL and Groq model permissions in GroqCloud.", true);
+        }
+        throw new AIServiceError(`${label} configuration error: ${lastError.message}`, true);
+      }
+      
       logger.warn(`${label} attempt ${attempt}/${MAX_RETRIES} failed: ${lastError.message}`, "GroqProvider");
 
       if (attempt < MAX_RETRIES) {

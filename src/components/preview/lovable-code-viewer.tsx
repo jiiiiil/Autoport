@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from "react";
 import { usePortfolioStore } from "@/lib/portfolio/store";
-import { generatePortfolioCodeFiles, downloadPortfolioZip, type CodeFile } from "@/lib/portfolio/code-generator";
+import { generatePortfolioCodeFiles, type CodeFile } from "@/lib/portfolio/code-generator";
 import { Code2, Copy, Check, FileCode, Download, Folder, ChevronRight, X, Maximize2, Minimize2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -36,6 +36,35 @@ export function LovableCodeViewer({ onClose }: { onClose?: () => void }) {
     setTimeout(() => setCopiedAll(false), 2000);
   };
 
+  const downloadPortfolioZipServer = async () => {
+    try {
+      const response = await fetch('/api/export', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ portfolio, composition }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate ZIP');
+      }
+
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      const authorName = (portfolio?.personalInfo?.name || 'portfolio').toLowerCase().replace(/[^a-z0-9]/g, '-');
+      link.href = url;
+      link.download = `${authorName}-react-portfolio.zip`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Download failed:', error);
+    }
+  };
+
   return (
     <div
       className={cn(
@@ -62,7 +91,7 @@ export function LovableCodeViewer({ onClose }: { onClose?: () => void }) {
 
         <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap justify-end">
           <button
-            onClick={() => downloadPortfolioZip(portfolio, composition)}
+            onClick={downloadPortfolioZipServer}
             className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 text-xs font-bold text-white shadow-lg shadow-indigo-500/20 hover:opacity-95 hover:scale-[1.02] active:scale-95 transition-all cursor-pointer border border-indigo-400/30"
           >
             <Download className="w-3.5 h-3.5" />

@@ -3736,7 +3736,10 @@ Open your browser at \`http://localhost:5173\` to view your live 3D portfolio!
   return files;
 }
 
+// Note: downloadPortfolioZip is deprecated - use server-side /api/export PUT endpoint instead
+// This function is kept for code viewer display purposes only
 export async function downloadPortfolioZip(portfolio: PortfolioObject | null, composition?: CompositionGraph | null) {
+  console.warn("downloadPortfolioZip is deprecated. Use server-side /api/export PUT endpoint for actual 1:1 component copying.");
   const files = generatePortfolioCodeFiles(portfolio, composition);
   const zip = new JSZip();
 

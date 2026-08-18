@@ -8,7 +8,6 @@ import { usePortfolioStore } from "@/lib/portfolio/store";
 import { PortfolioRenderer } from "@/components/portfolio/portfolio-renderer";
 import { LayoutQualityPanel } from "@/components/preview/layout-quality";
 import { LovableCodeViewer } from "./lovable-code-viewer";
-import { downloadPortfolioZip } from "@/lib/portfolio/code-generator";
 
 type ViewportSize = "desktop" | "tablet" | "mobile";
 
@@ -38,6 +37,38 @@ export function PreviewWorkspace() {
   const handleBack = useCallback(() => {
     router.push("/generation");
   }, [router]);
+
+  const downloadPortfolioZipServer = useCallback(async (portfolio: any, composition: any) => {
+    try {
+      const response = await fetch('/api/export', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ portfolio, composition }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Server error:', errorText);
+        throw new Error(`Failed to generate ZIP: ${errorText}`);
+      }
+
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      const authorName = (portfolio?.personalInfo?.name || 'portfolio').toLowerCase().replace(/[^a-z0-9]/g, '-');
+      link.href = url;
+      link.download = `${authorName}-react-portfolio.zip`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Download failed:', error);
+      alert(`Download failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }, []);
 
   return (
     <div className="w-full max-w-[100vw] overflow-x-clip min-h-screen bg-white">
@@ -136,7 +167,7 @@ export function PreviewWorkspace() {
 
         <button
           type="button"
-          onClick={() => downloadPortfolioZip(portfolio, composition)}
+          onClick={() => downloadPortfolioZipServer(portfolio, composition)}
           aria-label="Download ZIP Project"
           title="Download Full React + TS Project (.zip)"
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-xs font-bold shadow-md hover:scale-105 transition-all cursor-pointer"
