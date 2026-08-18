@@ -50,23 +50,43 @@ export async function POST(req: NextRequest) {
 
     logger.info(`Parsing resume PDF: "${filename}" (${buffer.byteLength} bytes)`, "API");
 
-    // Add timeout protection
-    const timeoutPromise = new Promise((_, reject) => {
-      setTimeout(() => reject(new Error("PDF parsing timeout")), 90000); // 90 seconds
+    // Add timeout protection with better error handling
+    const timeoutPromise = new Promise<never>((_, reject) => {
+      setTimeout(() => reject(new Error("PDF parsing timeout after 90 seconds")), 90000);
     });
 
-    const report = await Promise.race([
-      parseResumePdf(buffer, filename, buffer.byteLength),
-      timeoutPromise
-    ]) as Awaited<ReturnType<typeof parseResumePdf>>;
+    try {
+      const report = await Promise.race([
+        parseResumePdf(buffer, filename, buffer.byteLength),
+        timeoutPromise
+      ]) as Awaited<ReturnType<typeof parseResumePdf>>;
 
-    const duration = Date.now() - start;
-    logger.info(`Resume parsed in ${duration}ms — ${report.resume.experience.length} experiences, ${report.resume.education.length} educations, ${report.resume.skills.length} skill groups`, "API");
+      const duration = Date.now() - start;
+      logger.info(`Resume parsed in ${duration}ms — ${report.resume.experience.length} experiences, ${report.resume.education.length} educations, ${report.resume.skills.length} skill groups`, "API");
 
-    return Response.json(
-      successResponse(report, "Resume parsed successfully", { duration }),
-      { status: 200 }
-    );
+      return Response.json(
+        successResponse(report, "Resume parsed successfully", { duration }),
+        { status: 200 }
+      );
+    } catch (parseError) {
+      logger.error(`PDF parsing failed: ${parseError instanceof Error ? parseError.message : String(parseError)}`, "API", parseError);
+      
+      // Return more specific error message
+      const errorMessage = parseError instanceof Error ? parseError.message : String(parseError);
+      if (errorMessage.includes("timeout")) {
+        return Response.json(
+          errorResponse("PDF parsing took too long. Please try with a smaller file or try again later."),
+          { status: 504 }
+        );
+      }
+      if (errorMessage.includes("PDF parsing library")) {
+        return Response.json(
+          errorResponse("PDF parsing service unavailable. Please try again later."),
+          { status: 503 }
+        );
+      }
+      throw parseError;
+    }
   } catch (error) {
     logger.error(`PDF parse error: ${error instanceof Error ? error.message : String(error)}`, "API", error);
     return handleError(error);
