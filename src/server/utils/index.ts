@@ -5,6 +5,7 @@ export {
   NotFoundError,
   DatabaseError,
   AIServiceError,
+  PDFExtractionError,
   RateLimitError,
   AuthenticationError,
   ForbiddenError,

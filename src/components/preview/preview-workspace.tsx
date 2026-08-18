@@ -27,12 +27,29 @@ export function PreviewWorkspace() {
   const [showCode, setShowCode] = useState(false);
   const [showQuality, setShowQuality] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [isMobileDevice, setIsMobileDevice] = useState(false);
 
   useEffect(() => {
     setMounted(true);
+    // Detect if on actual mobile device
+    const checkMobile = () => {
+      const isMobile = window.innerWidth < 768;
+      setIsMobileDevice(isMobile);
+      // Auto-set viewport to mobile on actual mobile devices
+      if (isMobile) {
+        setViewport("mobile");
+      }
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   const viewportConfig = VIEWPORT_CONFIG[viewport];
+  
+  // On actual mobile devices, use full width instead of simulated mobile width
+  const effectiveWidth = isMobileDevice ? "100%" : viewportConfig.width;
 
   const handleBack = useCallback(() => {
     router.push("/generation");
@@ -73,7 +90,7 @@ export function PreviewWorkspace() {
   return (
     <div className="w-full max-w-[100vw] overflow-x-clip min-h-screen bg-white">
       {/* The portfolio fills the viewport exactly like a deployed website. */}
-      <div className="mx-auto w-full" style={{ width: viewportConfig.width, minHeight: "100vh" }}>
+      <div className="mx-auto w-full" style={{ width: effectiveWidth, minHeight: "100vh" }}>
         {mounted && isReady ? (
           <PortfolioRenderer
             portfolio={portfolio}
@@ -106,64 +123,68 @@ export function PreviewWorkspace() {
           <ArrowLeft className="w-4 h-4" />
         </button>
 
-        <div className="w-px h-5 bg-zinc-800" />
+        {!isMobileDevice && (
+          <>
+            <div className="w-px h-5 bg-zinc-800" />
 
-        <div className="flex items-center gap-0.5">
-          {(Object.entries(VIEWPORT_CONFIG) as [ViewportSize, typeof VIEWPORT_CONFIG[ViewportSize]][]).map(
-            ([key, config]) => {
-              const Icon = config.icon;
-              return (
-                <button
-                  key={key}
-                  type="button"
-                  onClick={() => setViewport(key)}
-                  aria-label={`${config.label} view`}
-                  title={`${config.label} view`}
-                  className={cn(
-                    "flex items-center justify-center w-8 h-8 rounded-full transition-colors cursor-pointer",
-                    viewport === key
-                      ? "bg-white/15 text-white"
-                      : "text-zinc-500 hover:text-zinc-300 hover:bg-white/5"
-                  )}
-                >
-                  <Icon className="w-4 h-4" />
-                </button>
-              );
-            }
-          )}
-        </div>
+            <div className="flex items-center gap-0.5">
+              {(Object.entries(VIEWPORT_CONFIG) as [ViewportSize, typeof VIEWPORT_CONFIG[ViewportSize]][]).map(
+                ([key, config]) => {
+                  const Icon = config.icon;
+                  return (
+                    <button
+                      key={key}
+                      type="button"
+                      onClick={() => setViewport(key)}
+                      aria-label={`${config.label} view`}
+                      title={`${config.label} view`}
+                      className={cn(
+                        "flex items-center justify-center w-8 h-8 rounded-full transition-colors cursor-pointer",
+                        viewport === key
+                          ? "bg-white/15 text-white"
+                          : "text-zinc-500 hover:text-zinc-300 hover:bg-white/5"
+                      )}
+                    >
+                      <Icon className="w-4 h-4" />
+                    </button>
+                  );
+                }
+              )}
+            </div>
 
-        <div className="w-px h-5 bg-zinc-800" />
+            <div className="w-px h-5 bg-zinc-800" />
 
-        <button
-          type="button"
-          onClick={() => setShowQuality(!showQuality)}
-          aria-label="Toggle layout quality"
-          title="Layout Quality Engine"
-          className={cn(
-            "flex items-center justify-center w-8 h-8 rounded-full transition-colors cursor-pointer",
-            showQuality
-              ? "bg-white/15 text-white"
-              : "text-zinc-500 hover:text-zinc-300 hover:bg-white/5"
-          )}
-        >
-          <LayoutDashboard className="w-4 h-4" />
-        </button>
+            <button
+              type="button"
+              onClick={() => setShowQuality(!showQuality)}
+              aria-label="Toggle layout quality"
+              title="Layout Quality Engine"
+              className={cn(
+                "flex items-center justify-center w-8 h-8 rounded-full transition-colors cursor-pointer",
+                showQuality
+                  ? "bg-white/15 text-white"
+                  : "text-zinc-500 hover:text-zinc-300 hover:bg-white/5"
+              )}
+            >
+              <LayoutDashboard className="w-4 h-4" />
+            </button>
 
-        <button
-          type="button"
-          onClick={() => setShowCode(!showCode)}
-          aria-label="Toggle code studio"
-          title="Lovable Code Studio"
-          className={cn(
-            "flex items-center justify-center w-8 h-8 rounded-full transition-colors cursor-pointer",
-            showCode
-              ? "bg-white/15 text-white"
-              : "text-zinc-500 hover:text-zinc-300 hover:bg-white/5"
-          )}
-        >
-          <Code2 className="w-4 h-4" />
-        </button>
+            <button
+              type="button"
+              onClick={() => setShowCode(!showCode)}
+              aria-label="Toggle code studio"
+              title="Lovable Code Studio"
+              className={cn(
+                "flex items-center justify-center w-8 h-8 rounded-full transition-colors cursor-pointer",
+                showCode
+                  ? "bg-white/15 text-white"
+                  : "text-zinc-500 hover:text-zinc-300 hover:bg-white/5"
+              )}
+            >
+              <Code2 className="w-4 h-4" />
+            </button>
+          </>
+        )}
 
         <button
           type="button"

@@ -2,7 +2,6 @@ import { getEnv } from "@/server/config";
 import { AIServiceError, logger } from "@/server/utils";
 import type { ResumeJSON, ResumeSourceInfo } from "./types";
 import { buildResumeExtractionPrompt } from "./prompts";
-import { mod } from "three/src/nodes/math/OperatorNode.js";
 
 const MAX_RETRIES = 3;
 const BASE_DELAY_MS = 1500;
@@ -259,30 +258,43 @@ function detectLinkedInHeuristic(filename: string, text: string): { detectedAsLi
   return { detectedAsLinkedIn: confidence >= 60, confidence: Math.min(confidence, 99) };
 }
 
-interface PDFParseClass {
-  new (opts: { data: Buffer }): PDFParseInstance;
-}
-
-interface PDFParseInstance {
-  getText(): Promise<{ text: string; pages: Array<{ num: number; text: string }> }>;
-  destroy(): Promise<void>;
-}
-
 async function loadPdfText(buffer: Buffer): Promise<{ text: string; pages: number }> {
   try {
-    const mod = await import("pdf-parse");
-    const { PDFParse } = mod as { PDFParse: PDFParseClass };
+    // Use pdfjs-dist in Node.js native mode without canvas dependencies
+    const pdfjsLib = await import("pdfjs-dist");
     
-    const parser = new PDFParse({ data: buffer });
-    try {
-      const result = await parser.getText();
-      return { text: result.text ?? "", pages: result.pages?.length ?? 1 };
-    } finally {
-      await parser.destroy();
+    // Load the document
+    const loadingTask = pdfjsLib.getDocument({
+      data: new Uint8Array(buffer),
+      useWorkerFetch: false,
+      isEvalSupported: false,
+      useSystemFonts: true,
+    });
+    
+    const pdfDocument = await loadingTask.promise;
+    const numPages = pdfDocument.numPages;
+    
+    let fullText = "";
+    
+    // Extract text from all pages
+    for (let i = 1; i <= numPages; i++) {
+      const page = await pdfDocument.getPage(i);
+      const textContent = await page.getTextContent();
+      const pageText = textContent.items
+        .map((item: any) => item.str || "")
+        .join(" ");
+      fullText += pageText + "\n";
     }
+    
+    return { 
+      text: fullText.trim(), 
+      pages: numPages 
+    };
   } catch (error) {
-    logger.error(`PDF parsing failed: ${error instanceof Error ? error.message : String(error)}`, "ResumeParser", error);
-    throw new AIServiceError("PDF parsing library unavailable");
+    // Preserve actual error in server logs
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    logger.error(`PDF parser error: ${errorMessage}`, "ResumeParser", error);
+    throw new AIServiceError("Unable to extract text from this PDF. Please ensure it's a text-based PDF, not a scanned image.");
   }
 }
 

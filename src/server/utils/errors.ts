@@ -11,7 +11,8 @@ export type ErrorCode =
   | "RATE_LIMIT_EXCEEDED"
   | "WEAK_PASSWORD"
   | "AI_CONFIGURATION_ERROR"
-  | "AI_SERVICE_ERROR";
+  | "AI_SERVICE_ERROR"
+  | "PDF_EXTRACTION_FAILED";
 
 export class AppError extends Error {
   public readonly statusCode: number;
@@ -89,6 +90,12 @@ export class AIServiceError extends AppError {
     const code = isConfigurationError ? "AI_CONFIGURATION_ERROR" : "AI_SERVICE_ERROR";
     const statusCode = isConfigurationError ? 500 : 503;
     super(message, statusCode, true, code);
+  }
+}
+
+export class PDFExtractionError extends AppError {
+  constructor(message = "Unable to extract text from this PDF") {
+    super(message, 503, true, "PDF_EXTRACTION_FAILED");
   }
 }
 
