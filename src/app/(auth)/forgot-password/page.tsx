@@ -10,7 +10,7 @@ export default function ForgotPasswordPage() {
     <RequireGuest>
       <AuthShell
         title="Reset your password"
-        subtitle="Enter your email and we will send you a reset link"
+        subtitle="Enter your email to generate a password reset link"
         footer={
           <Link href="/login" className="text-primary hover:text-primary-hover transition-colors">
             Remembered your password? Sign in

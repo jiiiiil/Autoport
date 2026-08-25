@@ -11,7 +11,7 @@ export function ForgotPasswordForm() {
   const [emailError, setEmailError] = useState<string>();
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
-  const [sent, setSent] = useState(false);
+  const [resetUrl, setResetUrl] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,8 +29,8 @@ export function ForgotPasswordForm() {
 
     setSubmitting(true);
     try {
-      await apiRequest("/api/auth/forgot-password", { method: "POST", body: { email } });
-      setSent(true);
+      const result = await apiRequest<{ resetUrl: string }>("/api/auth/forgot-password", { method: "POST", body: { email } });
+      setResetUrl(result.resetUrl);
     } catch (error) {
       setServerError(error instanceof Error ? error.message : "Something went wrong");
     } finally {
@@ -38,11 +38,20 @@ export function ForgotPasswordForm() {
     }
   };
 
-  if (sent) {
+  if (resetUrl) {
     return (
       <div className="space-y-4">
         <div className="rounded-lg bg-success/10 border border-success/30 px-4 py-3 text-sm text-success">
-          If an account exists for that email, a password reset link has been sent. Check your inbox.
+          Password reset link generated successfully!
+        </div>
+        <div className="space-y-2">
+          <p className="text-sm text-text-primary font-semibold">Click the link below to reset your password:</p>
+          <a
+            href={resetUrl}
+            className="block w-full text-center px-4 py-3 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors text-sm font-semibold"
+          >
+            Reset Password
+          </a>
         </div>
         <div className="text-center text-sm text-text-muted">
           <Link href="/login" className="text-primary hover:text-primary-hover transition-colors">

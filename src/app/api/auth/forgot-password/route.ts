@@ -24,11 +24,17 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Generic response — never reveals whether the account exists.
-    await authService.forgotPassword(validation.data);
+    const result = await authService.forgotPassword(validation.data);
+
+    if (!result) {
+      return Response.json(
+        successResponse(null, "If an account exists for that email, a password reset link has been generated"),
+        { status: 200 }
+      );
+    }
 
     return Response.json(
-      successResponse(null, "If an account exists for that email, a password reset link has been sent"),
+      successResponse(result, "Password reset link generated"),
       { status: 200 }
     );
   } catch (error) {

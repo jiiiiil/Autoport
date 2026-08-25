@@ -49,9 +49,9 @@ export function ThemeSelector() {
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <Palette className="w-4 h-4 text-purple-400" />
-          <h3 className="text-sm font-semibold text-white">Theme Palette</h3>
+          <h3 className="text-sm font-semibold text-text-primary">Theme Palette</h3>
         </div>
-        <span className="text-[11px] font-mono text-purple-300/70">Theme Options</span>
+        <span className="text-[11px] font-mono text-text-primary/70">Theme Options</span>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -70,7 +70,7 @@ export function ThemeSelector() {
                 "group relative rounded-2xl border p-4 text-left transition-all duration-300 cursor-pointer overflow-hidden",
                 active
                   ? "border-purple-500 bg-purple-950/40 shadow-lg shadow-purple-950/50"
-                  : "border-white/10 bg-white/[0.03] hover:border-white/25 hover:bg-white/[0.06]"
+                  : "border-black/10 bg-white hover:border-black/25 hover:bg-black/5"
               )}
             >
               <div className="flex items-start justify-between mb-3">
@@ -78,13 +78,13 @@ export function ThemeSelector() {
                   <div
                     className={cn(
                       "w-9 h-9 rounded-xl flex items-center justify-center transition-colors",
-                      active ? "bg-purple-500/20 text-purple-300" : "bg-white/5 text-text-muted"
+                      active ? "bg-purple-500/20 text-purple-300" : "bg-black/5 text-text-primary"
                     )}
                   >
                     <Icon className="w-4.5 h-4.5" />
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-white">{preset.label}</p>
+                    <p className="text-sm font-bold text-text-primary">{preset.label}</p>
                     <div className="flex gap-1.5 mt-1">
                       {preset.swatch.map((color) => (
                         <span
@@ -103,7 +103,7 @@ export function ThemeSelector() {
                   </span>
                 )}
               </div>
-              <p className="text-xs text-text-muted leading-relaxed">{preset.description}</p>
+              <p className="text-xs text-text-primary leading-relaxed font-semibold">{preset.description}</p>
             </button>
           );
         })}
@@ -117,7 +117,7 @@ export function ThemeSelector() {
             setShowCustom(!showCustom);
             if (!showCustom) setTheme("custom");
           }}
-          className="text-xs font-mono text-purple-300/80 hover:text-purple-200 transition-colors underline cursor-pointer"
+          className="text-xs font-mono text-text-primary/80 hover:text-primary transition-colors underline cursor-pointer"
         >
           {showCustom ? "Hide Custom Palette" : "+ Customize Specific Colors"}
         </button>
@@ -125,7 +125,7 @@ export function ThemeSelector() {
 
       {showCustom && (
         <div className="mt-4 rounded-2xl border border-purple-500/20 bg-purple-950/20 p-4 backdrop-blur-md">
-          <p className="text-xs font-medium text-purple-300/80 mb-3">
+          <p className="text-xs font-medium text-text-primary/80 mb-3">
             Custom Accent Tuning
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -135,9 +135,9 @@ export function ThemeSelector() {
                   type="color"
                   value={customColors[field.key] ?? "#9333ea"}
                   onChange={(e) => setCustomColors({ ...customColors, [field.key]: e.target.value })}
-                  className="w-7 h-7 rounded-lg border border-white/20 bg-transparent cursor-pointer"
+                  className="w-7 h-7 rounded-lg border border-black/20 bg-transparent cursor-pointer"
                 />
-                <span className="text-xs text-text-muted">{field.label}</span>
+                <span className="text-xs text-text-primary font-semibold">{field.label}</span>
               </label>
             ))}
           </div>

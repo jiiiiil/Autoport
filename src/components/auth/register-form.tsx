@@ -43,7 +43,7 @@ export function RegisterForm() {
 
     try {
       await register({ name, email, password });
-      window.location.assign("/dashboard");
+      window.location.assign("/");
     } catch {
       // error is stored in the auth store
     }

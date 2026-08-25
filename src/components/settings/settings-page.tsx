@@ -139,38 +139,6 @@ export function SettingsPage() {
             </Button>
           </form>
         </section>
-
-        <section className="glass rounded-2xl p-6 md:p-8">
-          <h2 className="text-xl font-bold text-text mb-1">Preferences</h2>
-          <p className="text-sm text-text-muted mb-6">Customize your workspace experience.</p>
-
-          {settingsSuccess ? (
-            <div className="mb-5 rounded-lg bg-success/10 border border-success/30 px-4 py-3 text-sm text-success">
-              Preferences saved.
-            </div>
-          ) : null}
-
-          <form onSubmit={handleSettingsSubmit} className="space-y-5">
-            <div className="space-y-1.5">
-              <label htmlFor="theme" className="block text-sm font-medium text-text-secondary">
-                Theme
-              </label>
-              <select
-                id="theme"
-                value={theme}
-                onChange={(e) => setTheme(e.target.value)}
-                className="w-full rounded-lg bg-bg-card border border-border px-3.5 py-2.5 text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors"
-              >
-                <option value="dark">Dark</option>
-                <option value="light">Light</option>
-              </select>
-            </div>
-            <Button type="submit" size="lg" disabled={savingSettings}>
-              {savingSettings ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-              Save preferences
-            </Button>
-          </form>
-        </section>
       </main>
     </div>
   );

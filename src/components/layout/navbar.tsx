@@ -10,8 +10,6 @@ import { useAuthStore } from "@/lib/auth-store";
 const navLinks = [
   { href: "/#features", label: "Features" },
   { href: "/upload", label: "Upload Resume" },
-  { href: "/generation", label: "Generation Lab" },
-  { href: "/preview", label: "Preview" },
 ];
 
 export function Navbar() {
@@ -64,13 +62,13 @@ export function Navbar() {
 
   return (
     <>
-      <nav className="w-full bg-bg-dark">
+      <nav className="w-full bg-bg">
         <div className="mx-auto max-w-7xl flex items-center justify-between px-4 sm:px-6 h-14">
           <Link href="/" className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-md bg-primary flex items-center justify-center">
-              <span className="text-white text-xs font-bold">A</span>
+              <span className="text-text-primary text-xs font-bold">A</span>
             </div>
-            <span className="text-white text-sm font-semibold tracking-tight">AI Portfolio</span>
+            <span className="text-text-primary text-sm font-semibold tracking-tight">AI Portfolio</span>
           </Link>
 
           <div className="hidden md:flex items-center gap-6">
@@ -79,8 +77,8 @@ export function Navbar() {
                 key={link.href}
                 href={link.href}
                 className={cn(
-                  "text-sm transition-colors",
-                  isActive(link.href) ? "text-white font-medium" : "text-text-muted hover:text-white"
+                  "text-sm transition-colors font-semibold",
+                  isActive(link.href) ? "text-text-primary font-bold" : "text-text-primary hover:text-primary"
                 )}
               >
                 {link.label}
@@ -93,45 +91,45 @@ export function Navbar() {
               <div className="relative" ref={menuRef}>
                 <button
                   onClick={() => setMenuOpen((v) => !v)}
-                  className="flex items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-white/5 transition-colors cursor-pointer"
+                  className="flex items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-black/5 transition-colors cursor-pointer"
                 >
                   <span className="w-7 h-7 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-semibold">
                     {initials}
                   </span>
-                  <span className="hidden sm:inline text-sm text-white max-w-[8rem] truncate">{user.name}</span>
-                  <ChevronDown className="w-3.5 h-3.5 text-text-muted" />
+                  <span className="hidden sm:inline text-sm text-text-primary max-w-[8rem] truncate">{user.name}</span>
+                  <ChevronDown className="w-3.5 h-3.5 text-text-primary" />
                 </button>
                 {menuOpen ? (
                   <div className="absolute right-0 top-full mt-2 w-52 rounded-xl border border-border-subtle bg-bg-card shadow-xl overflow-hidden z-50">
                     <div className="px-4 py-3 border-b border-border-subtle">
-                      <p className="text-sm font-semibold text-white truncate">{user.name}</p>
-                      <p className="text-xs text-text-muted truncate">{user.email}</p>
+                      <p className="text-sm font-semibold text-text-primary truncate">{user.name}</p>
+                      <p className="text-xs text-text-primary truncate">{user.email}</p>
                     </div>
                     <Link
                       href="/dashboard"
                       onClick={() => setMenuOpen(false)}
-                      className="flex items-center gap-2 px-4 py-2.5 text-sm text-text-secondary hover:bg-white/5 hover:text-white transition-colors"
+                      className="flex items-center gap-2 px-4 py-2.5 text-sm text-text-primary hover:bg-black/5 hover:text-primary transition-colors"
                     >
                       <LayoutDashboard className="w-4 h-4" /> Dashboard
                     </Link>
                     <Link
                       href="/profile"
                       onClick={() => setMenuOpen(false)}
-                      className="flex items-center gap-2 px-4 py-2.5 text-sm text-text-secondary hover:bg-white/5 hover:text-white transition-colors"
+                      className="flex items-center gap-2 px-4 py-2.5 text-sm text-text-primary hover:bg-black/5 hover:text-primary transition-colors"
                     >
                       <UserIcon className="w-4 h-4" /> Profile
                     </Link>
                     <Link
                       href="/settings"
                       onClick={() => setMenuOpen(false)}
-                      className="flex items-center gap-2 px-4 py-2.5 text-sm text-text-secondary hover:bg-white/5 hover:text-white transition-colors"
+                      className="flex items-center gap-2 px-4 py-2.5 text-sm text-text-primary hover:bg-black/5 hover:text-primary transition-colors"
                     >
                       <Settings className="w-4 h-4" /> Settings
                     </Link>
                     <button
                       onClick={handleLogout}
                       disabled={isLoading}
-                      className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-text-secondary hover:bg-white/5 hover:text-error border-t border-border-subtle transition-colors cursor-pointer disabled:opacity-50"
+                      className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-text-primary hover:bg-black/5 hover:text-error border-t border-border-subtle transition-colors cursor-pointer disabled:opacity-50"
                     >
                       <LogOut className="w-4 h-4" /> Log out
                     </button>
@@ -142,7 +140,7 @@ export function Navbar() {
               <div className="hidden sm:flex items-center gap-2">
                 <Link
                   href="/login"
-                  className="text-sm text-text-muted hover:text-white transition-colors px-3 py-2"
+                  className="text-sm text-text-primary hover:text-primary transition-colors px-3 py-2"
                 >
                   Sign in
                 </Link>
@@ -157,7 +155,7 @@ export function Navbar() {
 
             <button
               onClick={() => setMobileOpen((v) => !v)}
-              className="md:hidden flex items-center justify-center w-9 h-9 rounded-lg text-text-muted hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
+              className="md:hidden flex items-center justify-center w-9 h-9 rounded-lg text-text-primary hover:text-primary hover:bg-black/5 transition-colors cursor-pointer"
               aria-label="Toggle menu"
             >
               {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -177,10 +175,10 @@ export function Navbar() {
                   href={link.href}
                   onClick={() => setMobileOpen(false)}
                   className={cn(
-                    "block px-4 py-2.5 rounded-lg text-sm transition-colors",
+                    "block px-4 py-2.5 rounded-lg text-sm transition-colors font-semibold",
                     isActive(link.href)
-                      ? "text-white font-medium bg-white/5"
-                      : "text-text-secondary hover:text-white hover:bg-white/5"
+                      ? "text-text-primary font-bold bg-black/5"
+                      : "text-text-primary hover:text-primary hover:bg-black/5"
                   )}
                 >
                   {link.label}
@@ -193,28 +191,28 @@ export function Navbar() {
                   <Link
                     href="/dashboard"
                     onClick={() => setMobileOpen(false)}
-                    className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm text-text-secondary hover:text-white hover:bg-white/5 transition-colors"
+                    className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm text-text-primary hover:text-primary hover:bg-black/5 transition-colors"
                   >
                     <LayoutDashboard className="w-4 h-4" /> Dashboard
                   </Link>
                   <Link
                     href="/profile"
                     onClick={() => setMobileOpen(false)}
-                    className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm text-text-secondary hover:text-white hover:bg-white/5 transition-colors"
+                    className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm text-text-primary hover:text-primary hover:bg-black/5 transition-colors"
                   >
                     <UserIcon className="w-4 h-4" /> Profile
                   </Link>
                   <Link
                     href="/settings"
                     onClick={() => setMobileOpen(false)}
-                    className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm text-text-secondary hover:text-white hover:bg-white/5 transition-colors"
+                    className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm text-text-primary hover:text-primary hover:bg-black/5 transition-colors"
                   >
                     <Settings className="w-4 h-4" /> Settings
                   </Link>
                   <button
                     onClick={handleLogout}
                     disabled={isLoading}
-                    className="w-full flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm text-text-secondary hover:text-error hover:bg-white/5 transition-colors cursor-pointer disabled:opacity-50"
+                    className="w-full flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm text-text-primary hover:text-error hover:bg-black/5 transition-colors cursor-pointer disabled:opacity-50"
                   >
                     <LogOut className="w-4 h-4" /> Log out
                   </button>
@@ -224,7 +222,7 @@ export function Navbar() {
                   <Link
                     href="/login"
                     onClick={() => setMobileOpen(false)}
-                    className="text-center text-sm text-text-muted hover:text-white transition-colors px-4 py-2.5 rounded-lg hover:bg-white/5"
+                    className="text-center text-sm text-text-primary hover:text-primary transition-colors px-4 py-2.5 rounded-lg hover:bg-black/5"
                   >
                     Sign in
                   </Link>

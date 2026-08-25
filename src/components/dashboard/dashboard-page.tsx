@@ -5,18 +5,15 @@ import Link from "next/link";
 import {
   Trash2,
   FolderOpen,
-  Rocket,
   History,
   LogOut,
   Loader2,
   ExternalLink,
-  FolderPlus,
-  Layers,
   Menu,
   X,
-  LayoutDashboard,
   User,
   Settings,
+  Rocket,
 } from "lucide-react";
 import { apiRequest } from "@/lib/api-client";
 import { useAuthStore } from "@/lib/auth-store";
@@ -24,7 +21,7 @@ import { Button } from "@/components/ui/button";
 
 interface DashboardData {
   user: { id: string; name: string; email: string; createdAt: string };
-  stats: { portfolioCount: number; projectCount: number; generationCount: number };
+  stats: { portfolioCount: number; generationCount: number };
   portfolios: Array<{
     id: string;
     name: string;
@@ -32,15 +29,7 @@ interface DashboardData {
     status: string;
     createdAt: string;
     updatedAt: string;
-    _count: { projects: number; generations: number };
-  }>;
-  recentProjects: Array<{
-    id: string;
-    title: string;
-    description: string | null;
-    technologies: string[];
-    createdAt: string;
-    portfolio: { id: string; name: string; slug: string };
+    _count: { generations: number };
   }>;
   generations: Array<{
     id: string;
@@ -65,8 +54,8 @@ function StatCard({ icon, label, value }: { icon: React.ReactNode; label: string
     <div className="glass rounded-xl p-4 flex items-center gap-3">
       <div className="w-10 h-10 rounded-lg bg-primary/15 text-primary flex items-center justify-center">{icon}</div>
       <div>
-        <div className="text-2xl font-bold text-text leading-none">{value}</div>
-        <div className="text-xs text-text-muted mt-1">{label}</div>
+        <div className="text-2xl font-bold text-text-primary leading-none">{value}</div>
+        <div className="text-xs text-text-muted mt-1 font-semibold">{label}</div>
       </div>
     </div>
   );
@@ -78,7 +67,6 @@ export function DashboardPage() {
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [creating, setCreating] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
@@ -113,20 +101,8 @@ export function DashboardPage() {
     };
   }, []);
 
-  const handleCreatePortfolio = async () => {
-    setCreating(true);
-    try {
-      await apiRequest("/api/portfolios", { method: "POST", body: {} });
-      await loadDashboard();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to create portfolio");
-    } finally {
-      setCreating(false);
-    }
-  };
-
   const handleDeletePortfolio = async (id: string) => {
-    if (!window.confirm("Delete this portfolio and all of its projects?")) return;
+    if (!window.confirm("Delete this portfolio?")) return;
     setDeletingId(id);
     try {
       await apiRequest(`/api/portfolios/${id}`, { method: "DELETE" });
@@ -149,19 +125,16 @@ export function DashboardPage() {
         <div className="mx-auto max-w-6xl px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-md bg-primary flex items-center justify-center">
-              <span className="text-white text-xs font-bold">A</span>
+              <span className="text-text-primary text-xs font-bold">A</span>
             </div>
-            <span className="text-white text-sm font-semibold tracking-tight">AI Portfolio</span>
+            <span className="text-text-primary text-sm font-semibold tracking-tight">AI Portfolio</span>
           </Link>
           <div className="flex items-center gap-2 sm:gap-4">
             <nav className="hidden md:flex items-center gap-5 text-sm">
-              <Link href="/generation" className="text-text-muted hover:text-white transition-colors">
-                Generation Lab
-              </Link>
-              <Link href="/profile" className="text-text-muted hover:text-white transition-colors">
+              <Link href="/profile" className="text-text-primary hover:text-primary transition-colors">
                 Profile
               </Link>
-              <Link href="/settings" className="text-text-muted hover:text-white transition-colors">
+              <Link href="/settings" className="text-text-primary hover:text-primary transition-colors">
                 Settings
               </Link>
             </nav>
@@ -171,7 +144,7 @@ export function DashboardPage() {
             </Button>
             <button
               onClick={() => setMobileNavOpen((v) => !v)}
-              className="md:hidden flex items-center justify-center w-9 h-9 rounded-lg text-text-muted hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
+              className="md:hidden flex items-center justify-center w-9 h-9 rounded-lg text-text-primary hover:text-primary hover:bg-black/5 transition-colors cursor-pointer"
               aria-label="Toggle menu"
             >
               {mobileNavOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -180,16 +153,13 @@ export function DashboardPage() {
         </div>
         {mobileNavOpen && (
           <div className="md:hidden border-t border-border-subtle bg-bg-card px-4 py-3 space-y-1">
-            <Link href="/generation" onClick={() => setMobileNavOpen(false)} className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm text-text-secondary hover:text-white hover:bg-white/5 transition-colors">
-              <Rocket className="w-4 h-4" /> Generation Lab
-            </Link>
-            <Link href="/profile" onClick={() => setMobileNavOpen(false)} className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm text-text-secondary hover:text-white hover:bg-white/5 transition-colors">
+            <Link href="/profile" onClick={() => setMobileNavOpen(false)} className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm text-text-primary hover:text-primary hover:bg-black/5 transition-colors">
               <User className="w-4 h-4" /> Profile
             </Link>
-            <Link href="/settings" onClick={() => setMobileNavOpen(false)} className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm text-text-secondary hover:text-white hover:bg-white/5 transition-colors">
+            <Link href="/settings" onClick={() => setMobileNavOpen(false)} className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm text-text-primary hover:text-primary hover:bg-black/5 transition-colors">
               <Settings className="w-4 h-4" /> Settings
             </Link>
-            <button onClick={handleLogout} disabled={authLoading} className="w-full flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm text-text-secondary hover:text-error hover:bg-white/5 transition-colors cursor-pointer disabled:opacity-50">
+            <button onClick={handleLogout} disabled={authLoading} className="w-full flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm text-text-primary hover:text-error hover:bg-black/5 transition-colors cursor-pointer disabled:opacity-50">
               <LogOut className="w-4 h-4" /> Log out
             </button>
           </div>
@@ -215,32 +185,25 @@ export function DashboardPage() {
           </div>
         ) : data ? (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
               <StatCard icon={<FolderOpen className="w-5 h-5" />} label="Portfolios" value={data.stats.portfolioCount} />
-              <StatCard icon={<Layers className="w-5 h-5" />} label="Projects" value={data.stats.projectCount} />
               <StatCard icon={<History className="w-5 h-5" />} label="Generations" value={data.stats.generationCount} />
             </div>
 
             <section className="mb-12">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold text-text">Your Portfolios</h2>
-                <Button size="sm" onClick={handleCreatePortfolio} disabled={creating}>
-                  {creating ? <Loader2 className="w-4 h-4 animate-spin" /> : <FolderPlus className="w-4 h-4" />}
-                  New Portfolio
-                </Button>
-              </div>
+              <h2 className="text-lg font-semibold text-text mb-4">Your Portfolios</h2>
 
               {data.portfolios.length === 0 ? (
                 <div className="glass rounded-xl p-8 text-center">
                   <div className="mx-auto w-12 h-12 rounded-full bg-primary/15 text-primary flex items-center justify-center mb-3">
                     <FolderOpen className="w-6 h-6" />
                   </div>
-                  <p className="text-sm text-text-muted">
+                  <p className="text-sm text-text-primary font-semibold">
                     You don&apos;t have any portfolios yet.{" "}
-                    <Link href="/generation" className="text-primary hover:text-primary-hover">
-                      Generate one with AI
+                    <Link href="/upload" className="text-primary hover:text-primary-hover">
+                      Upload your resume
                     </Link>{" "}
-                    or create an empty portfolio.
+                    to create your first portfolio.
                   </p>
                 </div>
               ) : (
@@ -267,19 +230,14 @@ export function DashboardPage() {
                           )}
                         </button>
                       </div>
-                      <div className="flex items-center gap-4 text-xs text-text-muted">
-                        <span>{portfolio._count.projects} projects</span>
+                      <div className="flex items-center gap-4 text-xs text-text-primary">
                         <span>{portfolio._count.generations} generations</span>
-                        <span className="capitalize">{portfolio.status}</span>
+                        <span className="capitalize">
+                          {portfolio._count.generations === 0 ? "Draft" : portfolio.status}
+                        </span>
                       </div>
                       <div className="flex items-center justify-between mt-auto">
                         <span className="text-xs text-text-muted">{formatDate(portfolio.updatedAt)}</span>
-                        <Link
-                          href={`/portfolios/${portfolio.id}`}
-                          className="inline-flex items-center gap-1 text-xs text-primary hover:text-primary-hover transition-colors"
-                        >
-                          Manage <ExternalLink className="w-3 h-3" />
-                        </Link>
                       </div>
                     </div>
                   ))}
@@ -287,55 +245,18 @@ export function DashboardPage() {
               )}
             </section>
 
-            {data.recentProjects.length > 0 ? (
-              <section className="mb-12">
-                <h2 className="text-lg font-semibold text-text mb-4">Recent Projects</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {data.recentProjects.map((project) => (
-                    <div key={project.id} className="glass rounded-xl p-5">
-                      <div className="flex items-center justify-between gap-2">
-                        <h3 className="font-medium text-text truncate">{project.title}</h3>
-                        <span className="text-xs text-text-muted shrink-0">{formatDate(project.createdAt)}</span>
-                      </div>
-                      {project.description ? (
-                        <p className="text-sm text-text-secondary mt-1 line-clamp-2">{project.description}</p>
-                      ) : null}
-                      <div className="mt-3 flex flex-wrap gap-1.5">
-                        {project.technologies.slice(0, 5).map((tech) => (
-                          <span
-                            key={tech}
-                            className="text-xs px-2 py-0.5 rounded-md bg-primary/10 text-primary"
-                          >
-                            {tech}
-                          </span>
-                        ))}
-                      </div>
-                      <p className="text-xs text-text-muted mt-3">
-                        in{" "}
-                        <Link
-                          href={`/portfolios/${project.portfolio.id}`}
-                          className="text-primary hover:text-primary-hover"
-                        >
-                          {project.portfolio.name}
-                        </Link>
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </section>
-            ) : null}
-
             <section className="mb-8">
               <div className="flex items-center gap-2 mb-4">
                 <Rocket className="w-5 h-5 text-primary" />
                 <h2 className="text-lg font-semibold text-text">Generation History</h2>
               </div>
               {data.generations.length === 0 ? (
-                <div className="glass rounded-xl p-8 text-center text-sm text-text-muted">
+                <div className="glass rounded-xl p-8 text-center text-sm text-text-primary font-semibold">
                   No generations yet.{" "}
-                  <Link href="/generation" className="text-primary hover:text-primary-hover">
-                    Try the Generation Lab
-                  </Link>
+                  <Link href="/upload" className="text-primary hover:text-primary-hover">
+                    Upload your resume
+                  </Link>{" "}
+                  to create a portfolio.
                 </div>
               ) : (
                 <div className="glass rounded-xl divide-y divide-border-subtle">
@@ -360,9 +281,9 @@ export function DashboardPage() {
                         >
                           {generation.status}
                         </span>
-                        {generation.portfolio ? (
+                        {generation.status === "completed" && generation.portfolio ? (
                           <Link
-                            href={`/portfolios/${generation.portfolio.id}`}
+                            href="/preview"
                             className="text-xs text-primary hover:text-primary-hover"
                           >
                             View

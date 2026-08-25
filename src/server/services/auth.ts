@@ -30,13 +30,6 @@ function toSafeUser(user: SafeUser): SafeUser {
   };
 }
 
-/** Email delivery stub — replace with a real provider (e.g. Resend/SMTP). */
-async function sendPasswordResetEmail(email: string, resetUrl: string): Promise<void> {
-  const env = getEnv();
-  if (env.NODE_ENV !== "production") {
-    logger.info(`[dev] Password reset link for ${email}: ${resetUrl}`, "AuthService");
-  }
-}
 
 export const authService = {
   async register(input: { name: string; email: string; password: string }): Promise<SafeUser> {
@@ -82,12 +75,12 @@ export const authService = {
     return toSafeUser(user);
   },
 
-  async forgotPassword(input: { email: string }): Promise<void> {
+  async forgotPassword(input: { email: string }): Promise<{ resetUrl: string } | null> {
     const email = input.email.trim().toLowerCase();
     const user = await userRepository.findByEmail(email);
 
     if (!user) {
-      return;
+      return null;
     }
 
     await passwordResetRepository.deleteForUser(user.id);
@@ -100,7 +93,7 @@ export const authService = {
     await passwordResetRepository.create({ userId: user.id, tokenHash, expiresAt });
 
     const resetUrl = `${getEnv().APP_URL}/reset-password?token=${encodeURIComponent(token)}`;
-    await sendPasswordResetEmail(user.email, resetUrl);
+    return { resetUrl };
   },
 
   async resetPassword(input: { token: string; password: string }): Promise<void> {

@@ -71,10 +71,10 @@ export function ResumeDropzone() {
 
   if (isParsing) {
     return (
-      <div className="w-full max-w-xl mx-auto rounded-3xl border border-white/10 bg-white/[0.03] p-10 text-center">
-        <div className="flex items-center justify-center gap-3 text-white">
+      <div className="w-full max-w-xl mx-auto rounded-3xl border border-black/10 bg-white p-10 text-center">
+        <div className="flex items-center justify-center gap-3 text-text-primary">
           <Loader2 className="w-6 h-6 animate-spin text-primary" />
-          <p className="text-sm font-medium">Extracting intelligence from your resume...</p>
+          <p className="text-sm font-medium text-text-primary">Extracting intelligence from your resume...</p>
         </div>
         <div className="mt-6 space-y-2 text-left">
           {[
@@ -84,7 +84,7 @@ export function ResumeDropzone() {
             "Extracting experience, education, skills",
             "Normalizing and validating data",
           ].map((step) => (
-            <div key={step} className="flex items-center gap-2 text-xs text-text-muted">
+            <div key={step} className="flex items-center gap-2 text-xs text-text-primary">
               <Loader2 className="w-3 h-3 animate-spin text-primary/60" />
               <span className="animate-pulse">{step}</span>
             </div>
@@ -113,7 +113,7 @@ export function ResumeDropzone() {
           "cursor-pointer rounded-3xl border-2 border-dashed p-10 text-center transition-all duration-300",
           dragOver
             ? "border-primary bg-primary/10 scale-[1.01]"
-            : "border-white/15 bg-white/[0.03] hover:border-white/30 hover:bg-white/[0.05]"
+            : "border-black/15 bg-white hover:border-black/30 hover:bg-black/5"
         )}
       >
         <input
@@ -127,24 +127,24 @@ export function ResumeDropzone() {
         <div className="mx-auto w-16 h-16 rounded-2xl bg-primary/15 border border-primary/30 flex items-center justify-center mb-5">
           <FileUp className="w-7 h-7 text-primary" />
         </div>
-        <h3 className="text-lg font-semibold text-white mb-1">
+        <h3 className="text-lg font-semibold text-text-primary mb-1">
           Drop your LinkedIn Resume PDF here
         </h3>
-        <p className="text-sm text-text-muted mb-2">
+        <p className="text-sm text-text-primary mb-2 font-semibold">
           or click to browse your files
         </p>
-        <p className="text-xs text-text-muted/70">
+        <p className="text-xs text-text-primary/70 font-medium">
           PDF · up to 10MB · your resume is never shared
         </p>
       </div>
 
       {file && (
-        <div className="mt-4 flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3">
+        <div className="mt-4 flex items-center justify-between rounded-2xl border border-black/10 bg-white px-4 py-3">
           <div className="flex items-center gap-3">
             <FileText className="w-5 h-5 text-primary shrink-0" />
             <div>
-              <p className="text-sm font-medium text-white truncate max-w-[240px]">{file.name}</p>
-              <p className="text-xs text-text-muted">
+              <p className="text-sm font-medium text-text-primary truncate max-w-[240px]">{file.name}</p>
+              <p className="text-xs text-text-primary font-semibold">
                 {(file.size / 1024).toFixed(1)} KB
               </p>
             </div>
@@ -155,12 +155,12 @@ export function ResumeDropzone() {
               LinkedIn Resume detected
             </span>
           ) : (
-            <span className="text-xs text-text-muted">PDF detected</span>
+            <span className="text-xs text-text-primary font-semibold">PDF detected</span>
           )}
           <button
             type="button"
             onClick={() => useResumeStore.setState({ file: null })}
-            className="p-1.5 rounded-full text-text-muted hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+            className="p-1.5 rounded-full text-text-primary hover:text-primary hover:bg-black/10 transition-colors cursor-pointer"
             aria-label="Remove file"
           >
             <X className="w-4 h-4" />
@@ -170,7 +170,7 @@ export function ResumeDropzone() {
 
       {error && (
         <div className="mt-4 rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3">
-          <p className="text-sm text-red-400">{error}</p>
+          <p className="text-sm text-text-primary font-semibold">{error}</p>
         </div>
       )}
     </div>

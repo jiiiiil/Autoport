@@ -24,14 +24,14 @@ function StepBadge({ current }: { current: number }) {
         const done = i < current;
         return (
           <div key={step.label} className="flex items-center gap-2 sm:gap-3">
-            {i > 0 && <div className={`w-6 sm:w-10 h-px ${done ? "bg-primary" : "bg-white/15"}`} />}
+            {i > 0 && <div className={`w-6 sm:w-10 h-px ${done ? "bg-primary" : "bg-black/15"}`} />}
             <div
               className={`flex items-center gap-1.5 sm:gap-2 rounded-full px-2.5 sm:px-3.5 py-1.5 border transition-all duration-300 ${
                 active
-                  ? "border-primary bg-primary/10 text-white"
+                  ? "border-primary bg-primary/10 text-text-primary"
                   : done
-                    ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-400"
-                    : "border-white/10 bg-white/[0.03] text-text-muted"
+                    ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-600"
+                    : "border-black/20 bg-white text-text-primary"
               }`}
             >
               <Icon className="w-3.5 h-3.5" />
@@ -56,7 +56,7 @@ export function UploadStudio() {
   }, []);
 
   return (
-    <section className="relative w-full min-h-screen bg-bg-dark overflow-hidden">
+    <section className="relative w-full min-h-screen bg-bg overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(59,130,246,0.08)_0%,_transparent_60%)]" />
       <div className="absolute -top-40 -right-40 w-96 h-96 rounded-full bg-primary/10 blur-[120px]" />
       <div className="absolute -bottom-40 -left-40 w-96 h-96 rounded-full bg-accent/10 blur-[120px]" />
@@ -67,14 +67,14 @@ export function UploadStudio() {
             <Sparkles className="w-3.5 h-3.5 text-primary" />
             <span className="text-xs font-medium text-primary">Resume Intelligence Engine</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.5rem] font-bold leading-[1.1] tracking-tight text-white">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.5rem] font-bold leading-[1.1] tracking-tight text-text-primary">
             Upload your resume.
             <br />
             <span className="gradient-text bg-gradient-to-r from-blue-400 via-purple-400 to-accent">
               Get a portfolio.
             </span>
           </h1>
-          <p className="mt-4 text-text-muted text-base max-w-xl mx-auto">
+          <p className="mt-4 text-text-primary text-base max-w-xl mx-auto font-semibold">
             No prompts. No forms. Drop your LinkedIn Resume PDF, pick a theme and animation
             level, and our AI builds a premium portfolio automatically.
           </p>
@@ -87,8 +87,8 @@ export function UploadStudio() {
             <div className="mx-auto w-16 h-16 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center mb-6">
               <Sparkles className="w-7 h-7 text-emerald-400" />
             </div>
-            <h2 className="text-2xl font-bold text-white mb-2">Your portfolio is ready</h2>
-            <p className="text-sm text-text-muted mb-6">Opening the live preview...</p>
+            <h2 className="text-2xl font-bold text-text-primary mb-2">Your portfolio is ready</h2>
+            <p className="text-sm text-text-primary mb-6 font-semibold">Opening the live preview...</p>
           </FadeIn>
         ) : (
           <>
@@ -112,12 +112,12 @@ export function UploadStudio() {
             {stage === "error" && (
               <FadeIn className="text-center">
                 <div className="rounded-2xl border border-red-500/30 bg-red-500/10 px-6 py-8 max-w-xl mx-auto">
-                  <h3 className="text-lg font-semibold text-white mb-2">Something went wrong</h3>
-                  <p className="text-sm text-red-300 mb-6">{generationError ?? "An unexpected error occurred."}</p>
+                  <h3 className="text-lg font-semibold text-text-primary mb-2">Something went wrong</h3>
+                  <p className="text-sm text-text-primary mb-6 font-semibold">{generationError ?? "An unexpected error occurred."}</p>
                   <button
                     type="button"
                     onClick={() => setStage("upload")}
-                    className="inline-flex items-center justify-center rounded-xl bg-primary text-white text-sm font-medium px-6 py-3 hover:bg-primary-hover transition-colors cursor-pointer"
+                    className="inline-flex items-center justify-center rounded-xl bg-primary text-text-primary text-sm font-medium px-6 py-3 hover:bg-primary-hover transition-colors cursor-pointer"
                   >
                     Start over
                   </button>

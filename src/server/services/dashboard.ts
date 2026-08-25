@@ -4,37 +4,22 @@ import type { SafeUser } from "@/server/types";
 
 export const dashboardService = {
   async getOverview(user: SafeUser) {
-    const [portfolioCount, portfolios, recentProjects, generationHistory] = await Promise.all([
+    const [portfolioCount, portfolios, generationHistory] = await Promise.all([
       portfolioRepository.countForUser(user.id),
       portfolioRepository.listByUserWithDetails(user.id),
-      prisma.project.findMany({
-        where: { portfolio: { userId: user.id } },
-        orderBy: { createdAt: "desc" },
-        take: 10,
-        include: {
-          portfolio: { select: { id: true, name: true, slug: true } },
-        },
-      }),
       generationRepository.listByUser(user.id, 20),
     ]);
+
+    const completedGenerations = generationHistory.filter(g => g.status !== "pending");
 
     return {
       user,
       stats: {
         portfolioCount,
-        projectCount: recentProjects.length,
-        generationCount: generationHistory.length,
+        generationCount: completedGenerations.length,
       },
       portfolios,
-      recentProjects: recentProjects.map((project) => ({
-        id: project.id,
-        title: project.title,
-        description: project.description,
-        technologies: project.technologies,
-        createdAt: project.createdAt,
-        portfolio: project.portfolio,
-      })),
-      generations: generationHistory.map((generation) => ({
+      generations: completedGenerations.map((generation) => ({
         id: generation.id,
         prompt: generation.prompt,
         status: generation.status,

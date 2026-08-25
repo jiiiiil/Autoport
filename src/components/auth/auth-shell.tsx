@@ -35,7 +35,7 @@ export function AuthShell({ title, subtitle, children, footer }: AuthShellProps)
             <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center shadow-lg shadow-primary/20">
               <span className="text-white text-lg font-bold">A</span>
             </div>
-            <span className="text-white text-lg font-semibold tracking-tight">AI Portfolio</span>
+            <span className="text-text-primary text-lg font-semibold tracking-tight">AI Portfolio</span>
           </Link>
           <h1 className="text-2xl md:text-3xl font-bold text-text">{title}</h1>
           {subtitle ? <p className="mt-2 text-sm text-text-muted">{subtitle}</p> : null}

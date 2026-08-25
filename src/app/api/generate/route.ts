@@ -133,9 +133,12 @@ export async function POST(req: NextRequest) {
           await delay(150);
           sendEvent(controller, encoder.statusEvent("Portfolio generated successfully!"));
 
+          const duration = Date.now() - start;
+          await generationRepository.complete(payload.generationId, payload.portfolioData, duration);
+
           const responseData = {
             ...payload,
-            duration: Date.now() - start,
+            duration,
           };
 
           sendEvent(controller, encoder.doneEvent(JSON.stringify(responseData)));

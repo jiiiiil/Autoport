@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 
 export function LoginForm() {
   const searchParams = useSearchParams();
-  const next = searchParams.get("next") ?? "/dashboard";
+  const next = searchParams.get("next") ?? "/";
 
   const { login, isLoading, error, setError } = useAuthStore();
 

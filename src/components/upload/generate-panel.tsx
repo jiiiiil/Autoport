@@ -114,17 +114,17 @@ export function GeneratePanel() {
     <div>
       <div className="flex items-center gap-2 mb-4">
         <Wand2 className="w-4 h-4 text-primary" />
-        <h3 className="text-sm font-semibold text-white">Generate Portfolio</h3>
+        <h3 className="text-sm font-semibold text-text-primary">Generate Portfolio</h3>
       </div>
 
       {generating ? (
-        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
+        <div className="rounded-2xl border border-black/10 bg-white p-6">
           <div className="flex items-center gap-3 mb-4">
             <Loader2 className="w-5 h-5 animate-spin text-primary" />
-            <p className="text-sm text-white font-medium">{activePhase.label}</p>
+            <p className="text-sm text-text-primary font-medium">{activePhase.label}</p>
           </div>
 
-          <div className="h-1.5 w-full rounded-full bg-white/10 overflow-hidden">
+          <div className="h-1.5 w-full rounded-full bg-black/10 overflow-hidden">
             <div
               className="h-full rounded-full bg-gradient-to-r from-primary to-accent transition-all duration-500"
               style={{ width: `${activePhase.progress}%` }}
@@ -139,9 +139,9 @@ export function GeneratePanel() {
                 ) : i === phaseIndex ? (
                   <Loader2 className="w-3.5 h-3.5 animate-spin text-primary" />
                 ) : (
-                  <span className="w-3.5 h-3.5 rounded-full border border-white/15" />
+                  <span className="w-3.5 h-3.5 rounded-full border border-black/15" />
                 )}
-                <span className={i <= phaseIndex ? "text-white" : "text-text-muted"}>{phase.label}</span>
+                <span className={i <= phaseIndex ? "text-text-primary" : "text-text-primary/60"}>{phase.label}</span>
               </div>
             ))}
           </div>
@@ -151,14 +151,14 @@ export function GeneratePanel() {
           type="button"
           onClick={handleGenerate}
           disabled={!resume}
-          className="w-full inline-flex items-center justify-center gap-2 rounded-2xl bg-primary text-white text-sm font-semibold px-6 py-4 hover:bg-primary-hover transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shadow-lg shadow-primary/20"
+          className="w-full inline-flex items-center justify-center gap-2 rounded-2xl bg-primary text-text-primary text-sm font-semibold px-6 py-4 hover:bg-primary-hover transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shadow-lg shadow-primary/20"
         >
           <Wand2 className="w-4 h-4" />
           Generate Portfolio
         </button>
       )}
 
-      <p className="text-[10px] text-text-muted mt-3 leading-relaxed">
+      <p className="text-[10px] text-text-primary mt-3 leading-relaxed font-semibold">
         Every detail from your resume — name, experience, education, skills, projects,
         certifications, achievements, languages — is preserved exactly as extracted.
       </p>
