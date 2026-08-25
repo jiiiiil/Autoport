@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Palette, Moon, Sparkles } from "lucide-react";
+import { Check, Palette, Moon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useResumeStore } from "@/lib/resume-store";
 import type { ThemeName } from "@/server/resume/types";
@@ -21,13 +21,6 @@ const PRIMARY_THEMES: PrimaryThemeOption[] = [
     description: "Deep obsidian dark background with bold white h1 headings & pure white text.",
     icon: Moon,
     swatch: ["#050508", "#0e0e14", "#ffffff", "#00f0ff"],
-  },
-  {
-    id: "spatial-3d",
-    label: "AiPort Spatial 3D Engine",
-    description: "Apple editorial typography + Awwwards 3D character storytelling + scroll-driven spatial motion.",
-    icon: Sparkles,
-    swatch: ["#090a0f", "#141722", "#38bdf8", "#a855f7"],
   },
 ];
 
