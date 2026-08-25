@@ -47,7 +47,7 @@ export function CTA() {
                 </span>
               </h2>
 
-              <p className="text-lg md:text-xl text-text-primary max-w-2xl font-semibold">
+              <p className="text-lg md:text-xl text-text-primary max-w-2xl font-semibold mb-8">
                 Upload your LinkedIn Resume PDF and let the Resume Intelligence Engine
                 craft a premium portfolio — no writing required.
               </p>
@@ -55,24 +55,12 @@ export function CTA() {
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Link href="/upload">
-                    <Button 
-                      size="lg" 
+                    <Button
+                      size="lg"
                       className="bg-gradient-to-r from-primary to-accent hover:from-primary-hover hover:to-accent text-on-primary font-semibold px-8 py-4 text-lg shadow-2xl shadow-primary/30"
                     >
                       Upload Your Resume
                       <ArrowRight className="w-5 h-5 ml-2" />
-                    </Button>
-                  </Link>
-                </motion.div>
-
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Link href="/about">
-                    <Button 
-                      variant="ghost" 
-                      size="lg"
-                      className="text-text-primary hover:text-text-primary hover:bg-black/5 border border-black/10 px-8 py-4 text-lg"
-                    >
-                     
                     </Button>
                   </Link>
                 </motion.div>
