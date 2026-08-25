@@ -1,6 +1,8 @@
 import type { PortfolioObject } from "./types";
 import type { CompositionGraph } from "@/server/ai/composition/types";
 import JSZip from "jszip";
+import { CREATOR3D_SOURCE } from "./generated/creator3d-source";
+import { CREATOR3D_ASSET_FILES } from "./generated/creator3d-assets";
 
 export interface CodeFile {
   filename: string;
@@ -1911,6 +1913,24 @@ export function SpatialObject({ assetId, className = "", style, scale = 1, label
 `
   });
 
+  // 3d-creator theme — kept 1:1 identical to the live preview via auto-generated
+  // constants (scripts/sync-creator3d.mjs runs before dev/build).
+  files.push({
+    filename: "creator3d-portfolio-renderer.tsx",
+    language: "typescript",
+    path: "src/components/portfolio/creator3d-portfolio-renderer.tsx",
+    content: CREATOR3D_SOURCE,
+  });
+
+  for (const asset of CREATOR3D_ASSET_FILES) {
+    files.push({
+      filename: asset.path.split("/").pop() ?? asset.path,
+      language: "svg",
+      path: asset.path,
+      content: asset.content,
+    });
+  }
+
   files.push({
     filename: "spatial-portfolio-renderer.tsx",
     language: "typescript",
@@ -2046,6 +2066,7 @@ import { AnimeThreeCanvas } from "./interactive/anime-three-canvas";
 import { GBAfterlifeBackground } from "./interactive/gb-afterlife-canvas";
 import { SvgLiquidFilterProvider } from "./interactive/liquid-image";
 import { SpatialPortfolioRenderer } from "./spatial-portfolio-renderer";
+import { Creator3DPortfolioRenderer } from "./creator3d-portfolio-renderer";
 
 interface PortfolioRendererProps {
   portfolio: PortfolioObject;
@@ -2055,6 +2076,11 @@ interface PortfolioRendererProps {
 
 export function PortfolioRenderer({ portfolio, composition, className }: PortfolioRendererProps) {
   const themeMode = (portfolio.theme?.mode as string) || (composition?.theme?.mode as string);
+
+  if (themeMode === "3d-creator") {
+    return <Creator3DPortfolioRenderer portfolio={portfolio} className={className} />;
+  }
+
   const isSpatialTheme = themeMode === "spatial-3d" || themeMode === "spatial" || themeMode === "black" || themeMode === "dark" || !themeMode;
 
   if (isSpatialTheme) {

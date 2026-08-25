@@ -22,7 +22,7 @@ export function CTA() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="glass-strong rounded-3xl p-12 md:p-16 relative overflow-hidden"
+            className="glass-strong rounded-3xl p-6 sm:p-8 md:p-12 lg:p-16 relative overflow-hidden"
           >
             {/* Gradient Overlay */}
             <div className="absolute inset-0 bg-gradient-to-br from-primary/15 via-accent/10 to-primary/5" />
@@ -40,7 +40,7 @@ export function CTA() {
                 <Sparkles className="w-8 h-8 text-white" />
               </div>
 
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-text-primary mb-6">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-text-primary mb-6">
                 Ready to build your
                 <span className="gradient-text bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
                   {" "}portfolio?

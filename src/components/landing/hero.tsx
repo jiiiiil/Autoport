@@ -32,7 +32,7 @@ export function Hero() {
             </FadeIn>
 
             <FadeIn delay={0.2} y={20}>
-              <h1 className="text-5xl md:text-6xl lg:text-[4.5rem] font-bold leading-[1.05] tracking-tight text-text-primary">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[4.5rem] font-bold leading-[1.05] tracking-tight text-text-primary">
                 <span className="gradient-text bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
                   Upload your resume.
                 </span>
@@ -76,7 +76,7 @@ export function Hero() {
             </FadeIn>
 
             <FadeIn delay={0.5} y={20}>
-              <div className="flex items-center gap-6 pt-4 text-sm text-text-primary font-semibold">
+              <div className="flex flex-wrap items-center gap-x-6 gap-y-2 pt-4 text-sm text-text-primary font-semibold">
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-success animate-pulse" />
                   <span>No credit card required</span>

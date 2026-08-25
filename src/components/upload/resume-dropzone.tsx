@@ -71,7 +71,7 @@ export function ResumeDropzone() {
 
   if (isParsing) {
     return (
-      <div className="w-full max-w-xl mx-auto rounded-3xl border border-black/10 bg-white p-10 text-center">
+      <div className="w-full max-w-xl mx-auto rounded-3xl border border-black/10 bg-white p-6 sm:p-10 text-center">
         <div className="flex items-center justify-center gap-3 text-text-primary">
           <Loader2 className="w-6 h-6 animate-spin text-primary" />
           <p className="text-sm font-medium text-text-primary">Extracting intelligence from your resume...</p>
@@ -110,7 +110,7 @@ export function ResumeDropzone() {
         onDragLeave={() => setDragOver(false)}
         onDrop={handleDrop}
         className={cn(
-          "cursor-pointer rounded-3xl border-2 border-dashed p-10 text-center transition-all duration-300",
+          "cursor-pointer rounded-3xl border-2 border-dashed p-6 sm:p-10 text-center transition-all duration-300",
           dragOver
             ? "border-primary bg-primary/10 scale-[1.01]"
             : "border-black/15 bg-white hover:border-black/30 hover:bg-black/5"
@@ -139,11 +139,11 @@ export function ResumeDropzone() {
       </div>
 
       {file && (
-        <div className="mt-4 flex items-center justify-between rounded-2xl border border-black/10 bg-white px-4 py-3">
-          <div className="flex items-center gap-3">
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-x-3 gap-y-2 rounded-2xl border border-black/10 bg-white px-4 py-3">
+          <div className="flex items-center gap-3 min-w-0">
             <FileText className="w-5 h-5 text-primary shrink-0" />
-            <div>
-              <p className="text-sm font-medium text-text-primary truncate max-w-[240px]">{file.name}</p>
+            <div className="min-w-0">
+              <p className="text-sm font-medium text-text-primary truncate max-w-[240px] sm:max-w-[280px]">{file.name}</p>
               <p className="text-xs text-text-primary font-semibold">
                 {(file.size / 1024).toFixed(1)} KB
               </p>
@@ -151,8 +151,9 @@ export function ResumeDropzone() {
           </div>
           {detectedAsLinkedIn ? (
             <span className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-400">
-              <CheckCircle2 className="w-3.5 h-3.5" />
-              LinkedIn Resume detected
+              <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+              <span className="hidden sm:inline">LinkedIn Resume detected</span>
+              <span className="sm:hidden">LinkedIn</span>
             </span>
           ) : (
             <span className="text-xs text-text-primary font-semibold">PDF detected</span>
@@ -160,7 +161,7 @@ export function ResumeDropzone() {
           <button
             type="button"
             onClick={() => useResumeStore.setState({ file: null })}
-            className="p-1.5 rounded-full text-text-primary hover:text-primary hover:bg-black/10 transition-colors cursor-pointer"
+            className="ml-auto p-1.5 rounded-full text-text-primary hover:text-primary hover:bg-black/10 transition-colors cursor-pointer"
             aria-label="Remove file"
           >
             <X className="w-4 h-4" />

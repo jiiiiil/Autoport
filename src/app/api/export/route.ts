@@ -186,6 +186,18 @@ export async function PUT(req: NextRequest) {
       copyDirectoryRecursively(spatialLibDir, 'src/lib/spatial');
     }
 
+    // Copy static cover assets used by the 3d-creator theme (pixel-perfect parity with preview)
+    const coversDir = join(process.cwd(), 'public/covers');
+    if (existsSync(coversDir)) {
+      for (const item of readdirSync(coversDir)) {
+        if (item.endsWith('.svg')) {
+          const content = readFileSync(join(coversDir, item), 'utf-8');
+          files[`public/covers/${item}`] = content;
+          assetManifest.push(`public/covers/${item}`);
+        }
+      }
+    }
+
     // Add portfolio data
     files['src/portfolio.json'] = JSON.stringify(portfolio, null, 2);
     files['src/composition.json'] = JSON.stringify(composition || {}, null, 2);

@@ -234,7 +234,10 @@ import { designTokensToCssVars as designTokensToVars } from "./css";
 export function getComposedThemeForKey(key: DesignThemeKey): ComposedTheme {
   const theme = tokensToComposedTheme(getDesignTokens(key));
   if (key === "spatial-3d") {
-    theme.mode = "spatial-3d" as any;
+    theme.mode = "spatial-3d";
+  }
+  if (key === "3d-creator") {
+    theme.mode = "3d-creator";
   }
   return theme;
 }

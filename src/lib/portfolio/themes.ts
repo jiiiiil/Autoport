@@ -51,6 +51,29 @@ const WHITE_THEME_VARS: ThemeVars = {
   "--neu-inset": "inset 4px 4px 10px #cbd5e1, inset -4px -4px 10px #ffffff",
 };
 
+const CREATOR_3D_THEME_VARS: ThemeVars = {
+  "--p-bg": "#0C0C0C",
+  "--p-bg-card": "#1a1a1a",
+  "--p-bg-card-hover": "#252525",
+  "--p-border": "#2a2a2a",
+  "--p-border-subtle": "#1a1a1a",
+  "--p-text": "#D7E2EA",
+  "--p-text-muted": "#646973",
+  "--p-text-secondary": "#BBCCD7",
+  "--p-primary": "#BBCCD7",
+  "--p-primary-soft": "rgba(187, 204, 215, 0.12)",
+  "--p-primary-softer": "rgba(187, 204, 215, 0.06)",
+  "--p-secondary": "#646973",
+  "--p-accent": "#D7E2EA",
+  "--p-gradient-from": "#646973",
+  "--p-gradient-via": "#9AA7B5",
+  "--p-gradient-to": "#BBCCD7",
+  "--p-code-bg": "#161616",
+  "--p-code-border": "#2a2a2a",
+  "--neu-outset": "6px 6px 14px #050505, -6px -6px 14px #1c1c1c",
+  "--neu-inset": "inset 4px 4px 8px #050505, inset -4px -4px 8px #1c1c1c",
+};
+
 const FALLBACK_THEMES: Record<ThemeMode, ThemeVars> = {
   dark: BLACK_THEME_VARS,
   black: BLACK_THEME_VARS,
@@ -58,6 +81,7 @@ const FALLBACK_THEMES: Record<ThemeMode, ThemeVars> = {
   white: WHITE_THEME_VARS,
   "spatial-3d": BLACK_THEME_VARS,
   spatial: BLACK_THEME_VARS,
+  "3d-creator": CREATOR_3D_THEME_VARS,
 };
 
 export function getThemeStylesFromComposition(theme: ComposedTheme): React.CSSProperties {

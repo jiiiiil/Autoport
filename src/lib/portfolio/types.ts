@@ -179,7 +179,7 @@ export interface PortfolioContact {
   availableFor?: string;
 }
 
-export type ThemeMode = "dark" | "light" | "black" | "white" | "spatial-3d" | "spatial";
+export type ThemeMode = "dark" | "light" | "black" | "white" | "spatial-3d" | "spatial" | "3d-creator";
 
 export interface PortfolioTheme {
   mode: ThemeMode;

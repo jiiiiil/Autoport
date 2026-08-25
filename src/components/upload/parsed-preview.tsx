@@ -29,7 +29,7 @@ export function ParsedPreview() {
           </div>
           <div>
             <h3 className="text-base font-semibold text-text-primary">Resume parsed successfully</h3>
-            <p className="text-xs text-text-primary font-semibold">
+            <p className="text-xs text-text-primary font-semibold break-words">
               {resume.source.filename} · {detectedPages} page{detectedPages !== 1 ? "s" : ""} · parsed in {(resume.source.rawTextLength / 1024).toFixed(1)} KB of text
             </p>
           </div>
@@ -59,19 +59,19 @@ export function ParsedPreview() {
       )}
 
       <div className="rounded-2xl border border-black/10 bg-white p-5 mb-4">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <h4 className="text-2xl font-bold text-text-primary">{personal.name ?? "Unknown"}</h4>
+        <div className="flex flex-col sm:flex-row items-start sm:items-start justify-between gap-4">
+          <div className="min-w-0">
+            <h4 className="text-xl sm:text-2xl font-bold text-text-primary break-words">{personal.name ?? "Unknown"}</h4>
             {(personal.role || personal.headline) && (
-              <p className="text-sm text-primary mt-1 font-semibold">{personal.role ?? personal.headline}</p>
+              <p className="text-sm text-primary mt-1 font-semibold break-words">{personal.role ?? personal.headline}</p>
             )}
             {personal.location && (
-              <p className="text-xs text-text-primary mt-1 font-semibold">{personal.location}</p>
+              <p className="text-xs text-text-primary mt-1 font-semibold break-words">{personal.location}</p>
             )}
           </div>
-          <div className="flex gap-2 flex-wrap">
+          <div className="flex gap-2 flex-wrap max-w-full min-w-0">
             {personal.email && (
-              <span className="text-[10px] text-text-primary bg-black/5 rounded-full px-2.5 py-1">{personal.email}</span>
+              <span className="text-[10px] text-text-primary bg-black/5 rounded-full px-2.5 py-1 break-all max-w-full">{personal.email}</span>
             )}
             {personal.linkedin && (
               <span className="text-[10px] text-text-muted bg-white/5 rounded-full px-2.5 py-1">LinkedIn</span>

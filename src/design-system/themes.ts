@@ -27,6 +27,7 @@ export const DESIGN_THEME_KEYS: DesignThemeKey[] = [
   "white",
   "dark-blue",
   "spatial-3d",
+  "3d-creator",
   "minimal-light",
 ];
 
@@ -158,6 +159,29 @@ export const THEME_DEFINITIONS: ThemeDefinition[] = [
       error: "#dc2626",
       info: "#2563eb",
       overlay: "rgba(255, 255, 255, 0.9)",
+    },
+  },
+  {
+    key: "3d-creator",
+    label: "3D Creator Portfolio",
+    description: "Dark theme with gradient text, magnetic effects, and scroll-driven animations for creative portfolios.",
+    swatch: ["#0C0C0C", "#646973", "#BBCCD7", "#D7E2EA"],
+    mode: "dark",
+    backgroundStyle: "flat",
+    radiusStyle: "rounded",
+    glassIntensity: "subtle",
+    colors: {
+      primary: "#BBCCD7",
+      secondary: "#646973",
+      accent: "#D7E2EA",
+      background: "#0C0C0C",
+      surface: "#1a1a1a",
+      surfaceElevated: "#252525",
+      text: "#D7E2EA",
+      textSecondary: "#BBCCD7",
+      textMuted: "#646973",
+      border: "#2a2a2a",
+      borderSubtle: "#1a1a1a",
     },
   },
 ];

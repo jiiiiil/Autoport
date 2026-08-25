@@ -12,6 +12,7 @@ import { CompositionAnimator } from "./composition-animator";
 import { ThreeCanvasBackground } from "./interactive/three-canvas-background";
 
 import { SpatialPortfolioRenderer } from "./spatial-portfolio-renderer";
+import { Creator3DPortfolioRenderer } from "./creator3d-portfolio-renderer";
 
 interface PortfolioRendererProps {
   portfolio: PortfolioObject;
@@ -21,6 +22,11 @@ interface PortfolioRendererProps {
 
 export function PortfolioRenderer({ portfolio, composition, className }: PortfolioRendererProps) {
   const themeMode = (portfolio.theme?.mode as string) || (composition?.theme?.mode as string);
+
+  if (themeMode === "3d-creator") {
+    return <Creator3DPortfolioRenderer portfolio={portfolio} className={className} />;
+  }
+
   const isSpatialTheme = themeMode === "spatial-3d" || themeMode === "spatial" || themeMode === "black" || themeMode === "dark" || !themeMode;
 
   if (isSpatialTheme) {

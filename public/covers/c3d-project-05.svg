@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <defs>
+    <linearGradient id="bg5" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#100B18"/>
+      <stop offset="100%" stop-color="#0A0A0D"/>
+    </linearGradient>
+    <linearGradient id="prism5" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E959D8" stop-opacity="0.95"/>
+      <stop offset="55%" stop-color="#7621B0" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#BE4C00" stop-opacity="0.95"/>
+    </linearGradient>
+    <filter id="blur5" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="70"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="800" fill="url(#bg5)"/>
+  <ellipse cx="620" cy="430" rx="360" ry="230" fill="#7621B0" opacity="0.3" filter="url(#blur5)"/>
+  <polygon points="600,150 850,620 350,620" fill="none" stroke="url(#prism5)" stroke-width="30" stroke-linejoin="round"/>
+  <polygon points="600,255 760,560 440,560" fill="url(#prism5)" opacity="0.35"/>
+  <line x1="120" y1="620" x2="1080" y2="620" stroke="#D7E2EA" stroke-opacity="0.3" stroke-width="2"/>
+  <g stroke="#D7E2EA" stroke-opacity="0.35" stroke-width="2.5">
+    <path d="M 600 620 V 700"/><path d="M 460 620 L 380 700"/><path d="M 740 620 L 820 700"/>
+  </g>
+  <circle cx="600" cy="740" r="14" fill="#FF9AE9"/>
+  <circle cx="196" cy="188" r="48" fill="none" stroke="#BE4C00" stroke-opacity="0.6" stroke-width="3"/>
+  <circle cx="1010" cy="150" r="9" fill="#D7E2EA" fill-opacity="0.7"/>
+</svg>

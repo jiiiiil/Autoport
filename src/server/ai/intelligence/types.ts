@@ -63,7 +63,7 @@ export type Profession =
   | "creator" | "teacher" | "consultant" | "writer"
   | "musician" | "other";
 
-export type ThemeMode = "dark" | "light" | "system" | "both";
+export type ThemeMode = "dark" | "light" | "system" | "both" | "spatial-3d" | "3d-creator";
 
 export interface DetectedFramework {
   name: Framework;

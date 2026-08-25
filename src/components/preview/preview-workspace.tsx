@@ -200,7 +200,7 @@ export function PreviewWorkspace() {
 
       {/* Lovable Code Studio Drawer */}
       {showCode && (
-        <div className="fixed inset-y-0 right-0 z-50 w-full max-w-4xl p-4 flex items-center justify-end pointer-events-none">
+        <div className="fixed inset-y-0 right-0 z-50 w-full max-w-4xl p-2 sm:p-4 flex items-stretch sm:items-center justify-end pointer-events-none">
           <div className="w-full h-full pointer-events-auto">
             <LovableCodeViewer onClose={() => setShowCode(false)} />
           </div>

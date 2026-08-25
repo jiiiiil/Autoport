@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Palette, Moon } from "lucide-react";
+import { Check, Palette, Moon, Box } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useResumeStore } from "@/lib/resume-store";
 import type { ThemeName } from "@/server/resume/types";
@@ -21,6 +21,13 @@ const PRIMARY_THEMES: PrimaryThemeOption[] = [
     description: "Deep obsidian dark background with bold white h1 headings & pure white text.",
     icon: Moon,
     swatch: ["#050508", "#0e0e14", "#ffffff", "#00f0ff"],
+  },
+  {
+    id: "3d-creator",
+    label: "3D Creator Portfolio",
+    description: "Dark theme with gradient text, magnetic effects, and scroll-driven animations for creative portfolios.",
+    icon: Box,
+    swatch: ["#0C0C0C", "#646973", "#BBCCD7", "#D7E2EA"],
   },
 ];
 

@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "prisma generate && next build",
+    "dev": "node scripts/sync-creator3d.mjs && next dev",
+    "build": "prisma generate && node scripts/sync-creator3d.mjs && next build",
     "start": "next start",
     "lint": "eslint",
+    "sync:creator3d": "node scripts/sync-creator3d.mjs",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",

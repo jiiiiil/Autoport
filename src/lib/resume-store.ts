@@ -11,6 +11,8 @@ export type UploadStage =
   | "complete"
   | "error";
 
+const DEFAULT_THEME: ThemeName = "3d-creator";
+
 export interface ResumeState {
   stage: UploadStage;
   file: { name: string; size: number } | null;
@@ -55,7 +57,7 @@ export const useResumeStore = create<ResumeState>((set) => ({
   detectedAsLinkedIn: false,
   detectedPages: null,
 
-  theme: "spatial-3d",
+  theme: DEFAULT_THEME,
   animationLevel: "medium",
   customColors: {},
   presets: {
@@ -106,7 +108,7 @@ export const useResumeStore = create<ResumeState>((set) => ({
       parseDurationMs: null,
       detectedAsLinkedIn: false,
       detectedPages: null,
-      theme: "black",
+      theme: DEFAULT_THEME,
       animationLevel: "medium",
       customColors: {},
       presets: {

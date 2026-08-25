@@ -3,6 +3,7 @@ export type ThemeName =
   | "white"
   | "dark-blue"
   | "spatial-3d"
+  | "3d-creator"
   | "custom";
 
 export type AnimationLevel = "minimal" | "medium" | "heavy";

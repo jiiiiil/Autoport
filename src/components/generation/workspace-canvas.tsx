@@ -23,11 +23,11 @@ export function WorkspaceCanvas({ className }: WorkspaceCanvasProps) {
           "shadow-2xl"
         )}
       >
-        <div className="absolute inset-0 p-5 flex flex-col gap-4 overflow-y-auto">
-          <div className="flex gap-3 mb-2">
-            <div className="w-24 h-3 rounded bg-white/5" />
-            <div className="w-16 h-3 rounded bg-white/5" />
-            <div className="w-20 h-3 rounded bg-white/5" />
+        <div className="absolute inset-0 p-5 pb-56 sm:pb-52 md:p-5 md:pb-5 flex flex-col gap-4 overflow-y-auto">
+          <div className="flex gap-3 mb-2 pr-24 sm:pr-28">
+            <div className="w-24 h-3 rounded bg-white/5 shrink-0" />
+            <div className="w-16 h-3 rounded bg-white/5 shrink-0" />
+            <div className="w-20 h-3 rounded bg-white/5 shrink-0 hidden min-[420px]:block" />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -62,7 +62,7 @@ export function WorkspaceCanvas({ className }: WorkspaceCanvasProps) {
           </div>
         </div>
 
-        <div className="absolute bottom-4 left-4">
+        <div className="absolute bottom-4 left-4 right-4 sm:right-auto max-w-[calc(100%-2rem)] sm:max-w-xs">
           <TerminalWindow />
         </div>
       </div>
