@@ -52,7 +52,7 @@ export function PreviewWorkspace() {
   const effectiveWidth = isMobileDevice ? "100%" : viewportConfig.width;
 
   const handleBack = useCallback(() => {
-    router.push("/generation");
+    router.push("/upload");
   }, [router]);
 
   const downloadPortfolioZipServer = useCallback(async (portfolio: any, composition: any) => {
