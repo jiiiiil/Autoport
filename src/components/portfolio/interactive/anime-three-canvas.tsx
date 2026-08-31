@@ -31,7 +31,15 @@ export function AnimeThreeCanvas({ className = "", gridSize = 4 }: AnimeThreeCan
       );
     };
 
+    // Detect if Black theme is active (for cube color adjustments)
+    const detectBlackTheme = () => {
+      if (typeof document === "undefined") return false;
+      const root = document.querySelector(".ap-portfolio-root") || document.querySelector(".portfolio-root") || document.body;
+      return root.classList.contains("theme-black");
+    };
+
     const isLight = detectLightMode();
+    const isBlackTheme = detectBlackTheme();
 
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
@@ -69,10 +77,12 @@ export function AnimeThreeCanvas({ className = "", gridSize = 4 }: AnimeThreeCan
     const spread = ((gridSize - 1) / 2) * cellSize * 1.35; // Wider spread for full screen
     const geometry = new THREE.BoxGeometry(cellSize, cellSize, cellSize);
 
-    // Cube Material: Onyx Black in Light Mode, Platinum Silver in Dark Mode
+    // Cube Material: Onyx Black in Light Mode, Platinum Silver in Dark Mode, Almost Black in Black Theme
     const material = new THREE.MeshLambertMaterial({
-      color: new THREE.Color(isLight ? "#09090b" : "#e2e8f0"),
-      emissive: new THREE.Color(isLight ? "#18181b" : "#050508"),
+      color: new THREE.Color(isLight ? "#09090b" : (isBlackTheme ? "#050508" : "#e2e8f0")),
+      emissive: new THREE.Color(isLight ? "#18181b" : (isBlackTheme ? "#000000" : "#050508")),
+      transparent: isBlackTheme,
+      opacity: isBlackTheme ? 0.3 : 1.0,
     });
 
     const mesh = new THREE.InstancedMesh(geometry, material, count);
@@ -231,8 +241,11 @@ export function AnimeThreeCanvas({ className = "", gridSize = 4 }: AnimeThreeCan
     // Theme class mutation observer to update 3D cube colors dynamically on theme switch
     const observer = new MutationObserver(() => {
       const currentIsLight = detectLightMode();
-      material.color.set(currentIsLight ? "#09090b" : "#e2e8f0");
-      material.emissive.set(currentIsLight ? "#18181b" : "#050508");
+      const currentIsBlackTheme = detectBlackTheme();
+      material.color.set(currentIsLight ? "#09090b" : (currentIsBlackTheme ? "#050508" : "#e2e8f0"));
+      material.emissive.set(currentIsLight ? "#18181b" : (currentIsBlackTheme ? "#000000" : "#050508"));
+      material.transparent = currentIsBlackTheme;
+      material.opacity = currentIsBlackTheme ? 0.3 : 1.0;
       scene.fog = new THREE.FogExp2(currentIsLight ? 0xffffff : 0x050508, 0.012);
     });
 
